@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tem English</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TEM ENGLISH</h1>
+        </header>
+        <main>
+            <section id="auth-section">
+                <div class="auth-box">
+                    <h2>MEMBER ACCESS</h2>
+                    <p class="hero-text">Join the community via Telegram.</p>
+                    <!-- Telegram Login Widget Placeholder -->
+                    <div id="telegram-login-container"></div>
+                </div>
+            </section>
+
+            <section id="member-area" style="display: none;">
+                <div class="profile-header">
+                    <img id="user-photo" src="" alt="" style="display: none; width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 2px solid var(--button-border);">
+                    <h2 id="welcome-msg">WELCOME</h2>
+                </div>
+                <nav class="actions">
+                    <button class="tactile-button">MY LESSONS</button>
+                    <button class="tactile-button">PROGRESS</button>
+                    <button class="tactile-button" onclick="auth.logout()">LOGOUT</button>
+                </nav>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2026 TEM ENGLISH</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
