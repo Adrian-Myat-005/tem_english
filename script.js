@@ -1,5 +1,5 @@
-// Tem English - Ultimate Stability Logic
-// Professional Grade - 100% Robustness
+// Tem English - Ultimate Stability & Professional Grade
+// 100% Robustness & Device Responsive
 
 (function() {
     "use strict";
@@ -40,6 +40,8 @@
                 if (e.key === 'Escape') {
                     if (ui.get('profile-popup')?.style.display === 'flex') ui.togglePopup();
                     if (ui.get('main-menu-popup')?.style.display === 'flex') ui.toggleMenu();
+                    if (ui.get('days-section')?.style.display === 'flex') days.close();
+                    if (ui.get('numbers-section')?.style.display === 'flex') numbers.close();
                 }
             });
         },
@@ -81,7 +83,7 @@
         currentIndex: 0,
         score: 0,
         level: 0,
-        totalQuestions: 20, // INCREASED TO 20
+        totalQuestions: 20, 
         allDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
 
         start: () => {
@@ -142,7 +144,7 @@
         },
 
         speakQuestion: () => {
-            if (!days.currentQuestion) return;
+            if (!days.currentQuestion || ui.get('days-section')?.style.display === 'none') return;
             window.speechSynthesis.cancel();
             const msg = new SpeechSynthesisUtterance(days.currentQuestion.text);
             msg.lang = 'en-US';
@@ -165,6 +167,7 @@
                 });
             }
             setTimeout(() => {
+                if (ui.get('days-section')?.style.display === 'none') return;
                 days.currentIndex++;
                 if (days.currentIndex < days.totalQuestions) days.nextQuestion();
                 else days.showResult();
@@ -203,9 +206,7 @@
         initLesson: (level) => {
             const pool = [];
             const titles = ["MIXED ALL", "2-DIGITS", "HUNDREDS", "THOUSANDS", "10-THOUSANDS", "100-THOUSANDS"];
-            
-            // Simplified, robust pool generation to prevent hangs
-            const countToGenerate = (level === 1) ? 80 : 100; // 2-digits max is 90
+            const countToGenerate = (level === 1) ? 80 : 100;
             
             for (let i = 0; i < countToGenerate; i++) {
                 let num;
@@ -221,7 +222,6 @@
                         default: num = Math.floor(10 + Math.random() * 999990); break;
                     }
                 } while (pool.includes(num) && attempts < 10);
-                
                 pool.push(num);
             }
 
@@ -287,6 +287,7 @@
         },
 
         speak: () => {
+            if (ui.get('numbers-section')?.style.display === 'none') return;
             const text = ui.get('card-text')?.textContent;
             if (!text) return;
             window.speechSynthesis.cancel();
@@ -366,7 +367,6 @@
         }
     };
 
-    // EXPOSE TO GLOBAL SCOPE FOR HTML ONCLICK
     window.ui = ui;
     window.days = days;
     window.numbers = numbers;
