@@ -1,7 +1,6 @@
 // Tem English - Perfected Logic
 
 const BOT_USERNAME = "Tem_english_bot"; 
-// Using the new confirmed URL
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXWYCkRbEtwsangwPvq5hxfkFoRCIYk_2_D3VDQm26BpoASeVgfkfm_HMu1dY77jTFmg/exec";
 
 const ui = {
@@ -10,7 +9,6 @@ const ui = {
         const isVisible = popup.style.display === 'flex';
         popup.style.display = isVisible ? 'none' : 'flex';
         
-        // Focus the name input when opening
         if (!isVisible) {
             setTimeout(() => document.getElementById('edit-name').focus(), 100);
         }
@@ -20,50 +18,9 @@ const ui = {
         const popup = document.getElementById('main-menu-popup');
         const isVisible = popup.style.display === 'flex';
         popup.style.display = isVisible ? 'none' : 'flex';
-        if (!isVisible) ui.renderMenu('main');
-    },
-
-    renderMenu: (view) => {
-        const container = document.getElementById('menu-container');
-        let html = '';
-
-        switch(view) {
-            case 'main':
-                html = `
-                    <div class="menu-list">
-                        <button class="tactile-button" onclick="ui.renderMenu('tools')">Tools</button>
-                    </div>
-                `;
-                break;
-            case 'tools':
-                html = `
-                    <div class="menu-header">
-                        <button class="back-button" onclick="ui.renderMenu('main')">←</button>
-                        <span class="member-name">Tools</span>
-                    </div>
-                    <div class="menu-list">
-                        <button class="tactile-button" onclick="ui.renderMenu('beginner_tools')">Beginner Tools</button>
-                    </div>
-                `;
-                break;
-            case 'beginner_tools':
-                html = `
-                    <div class="menu-header">
-                        <button class="back-button" onclick="ui.renderMenu('tools')">←</button>
-                        <span class="member-name">Beginner Tools</span>
-                    </div>
-                    <div class="menu-list">
-                        <button class="tactile-button">Numbers</button>
-                        <button class="tactile-button">Days</button>
-                    </div>
-                `;
-                break;
-        }
-        container.innerHTML = html;
     },
     
     initListeners: () => {
-        // Close popup when clicking outside the content
         window.addEventListener('click', (e) => {
             const profilePopup = document.getElementById('profile-popup');
             const menuPopup = document.getElementById('main-menu-popup');
@@ -71,7 +28,6 @@ const ui = {
             if (e.target === menuPopup) ui.toggleMenu();
         });
 
-        // Close on ESC key
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const profilePopup = document.getElementById('profile-popup');
@@ -97,8 +53,6 @@ const ui = {
             }
 
             countBadge.textContent = `${members.length} MEMBERS JOINED`;
-
-            // Duplicate the list to ensure smooth infinite scroll
             const displayMembers = [...members, ...members, ...members];
             
             track.innerHTML = displayMembers.map(m => `
@@ -110,14 +64,131 @@ const ui = {
                 </div>
             `).join('');
 
-            // Adjust animation speed based on count
             const duration = Math.max(20, members.length * 5);
             track.style.animationDuration = `${duration}s`;
-
         } catch (e) {
             console.error('Slider load failed:', e);
             document.getElementById('member-slider-section').style.display = 'none';
         }
+    }
+};
+
+const numbers = {
+    currentLesson: [],
+    currentIndex: 0,
+    score: 0,
+    isFlipped: false,
+
+    start: () => {
+        document.getElementById('numbers-section').style.display = 'flex';
+        document.getElementById('lesson-selection').style.display = 'grid';
+        document.getElementById('flashcard-area').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('lesson-title').textContent = 'NUMBERS';
+        const menu = document.getElementById('main-menu-popup');
+        if (menu.style.display === 'flex') ui.toggleMenu();
+    },
+
+    close: () => {
+        document.getElementById('numbers-section').style.display = 'none';
+    },
+
+    initLesson: (level) => {
+        const pool = [];
+        const titles = ["MIXED ALL", "2-DIGITS", "HUNDREDS", "THOUSANDS", "10-THOUSANDS", "100-THOUSANDS"];
+        
+        while (pool.length < 100) {
+            let num;
+            switch(level) {
+                case 1: num = Math.floor(10 + Math.random() * 90); break;
+                case 2: num = Math.floor(100 + Math.random() * 900); break;
+                case 3: num = Math.floor(1000 + Math.random() * 9000); break;
+                case 4: num = Math.floor(10000 + Math.random() * 90000); break;
+                case 5: num = Math.floor(100000 + Math.random() * 900000); break;
+                default: num = Math.floor(10 + Math.random() * 999990); break;
+            }
+            if (!pool.includes(num)) pool.push(num);
+        }
+
+        numbers.currentLesson = pool.sort(() => 0.5 - Math.random()).slice(0, 20);
+        numbers.currentIndex = 0;
+        numbers.score = 0;
+        numbers.isFlipped = false;
+
+        document.getElementById('lesson-selection').style.display = 'none';
+        document.getElementById('flashcard-area').style.display = 'block';
+        document.getElementById('lesson-title').textContent = titles[level];
+        
+        numbers.showCard();
+    },
+
+    showCard: () => {
+        const num = numbers.currentLesson[numbers.currentIndex];
+        const flashcard = document.getElementById('flashcard');
+        
+        numbers.isFlipped = false;
+        flashcard.classList.remove('flipped');
+        document.getElementById('card-controls').style.visibility = 'hidden';
+        document.getElementById('card-number').textContent = num.toLocaleString();
+        document.getElementById('card-text').textContent = numbers.toWords(num);
+        
+        const progress = ((numbers.currentIndex + 1) / 20) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+        document.getElementById('progress-text').textContent = `${numbers.currentIndex + 1} / 20`;
+    },
+
+    flip: () => {
+        if (numbers.isFlipped) return;
+        numbers.isFlipped = true;
+        document.getElementById('flashcard').classList.add('flipped');
+        document.getElementById('card-controls').style.visibility = 'visible';
+        setTimeout(() => numbers.speak(), 300);
+    },
+
+    next: (isPass) => {
+        if (isPass) numbers.score++;
+        numbers.currentIndex++;
+        
+        if (numbers.currentIndex < 20) {
+            numbers.showCard();
+        } else {
+            numbers.showResult();
+        }
+    },
+
+    showResult: () => {
+        document.getElementById('flashcard-area').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('final-score').textContent = `${numbers.score} / 20`;
+        
+        let msg = "Keep practicing!";
+        if (numbers.score === 20) msg = "PERFECT! You're a pro!";
+        else if (numbers.score > 15) msg = "Great job! Almost there!";
+        document.getElementById('result-msg').textContent = msg;
+    },
+
+    toWords: (n) => {
+        const ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+        const teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+        const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+        
+        const convert = (num) => {
+            if (num < 10) return ones[num];
+            if (num < 20) return teens[num - 10];
+            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? "-" + ones[num % 10] : "");
+            if (num < 1000) return ones[Math.floor(num / 100)] + " hundred" + (num % 100 !== 0 ? " and " + convert(num % 100) : "");
+            if (num < 1000000) return convert(Math.floor(num / 1000)) + " thousand" + (num % 1000 !== 0 ? (num % 1000 < 100 ? " and " : " ") + convert(num % 1000) : "");
+            return num.toString();
+        };
+        return convert(n);
+    },
+
+    speak: () => {
+        const text = document.getElementById('card-text').textContent;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US';
+        msg.rate = 0.85; 
+        window.speechSynthesis.speak(msg);
     }
 };
 
@@ -133,7 +204,6 @@ const auth = {
     registerStudent: (user) => {
         const photo = user.photo_url || '';
         const query = `id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}&photo_url=${encodeURIComponent(photo)}`;
-        // Tactical background fetch
         fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' })
             .catch(e => console.error('Silent failure:', e));
     },
@@ -141,23 +211,18 @@ const auth = {
     updateName: () => {
         const user = JSON.parse(localStorage.getItem('logged_user'));
         const newName = document.getElementById('edit-name').value.trim();
-        
         if (!newName) return;
         
         const btn = document.querySelector('.edit-name-group .tactile-button');
         const originalText = btn.textContent;
-        
         btn.textContent = 'Updating...';
         btn.disabled = true;
 
         const query = `type=update_name&id=${user.id}&new_name=${encodeURIComponent(newName)}`;
-        
         fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' })
             .then(() => {
                 user.first_name = newName;
                 localStorage.setItem('logged_user', JSON.stringify(user));
-                
-                // Visual feedback before closing
                 btn.textContent = 'Confirmed';
                 setTimeout(() => {
                     ui.togglePopup();
@@ -177,22 +242,17 @@ const auth = {
         document.getElementById('member-slider-section').style.display = 'none';
         document.getElementById('member-area').style.display = 'block';
         
+        document.getElementById('main-menu-trigger').style.display = 'flex';
         const trigger = document.getElementById('user-profile-trigger');
         trigger.style.display = 'flex';
         trigger.onclick = ui.togglePopup;
 
-        const menuTrigger = document.getElementById('main-menu-trigger');
-        menuTrigger.style.display = 'flex';
-        menuTrigger.onclick = ui.toggleMenu;
-
         if (user.photo_url) {
             document.getElementById('user-photo').src = user.photo_url;
         } else {
-            // Placeholder if no photo
             document.getElementById('user-photo').style.display = 'none';
             trigger.innerHTML = '<span style="font-size: 1.2rem;">👤</span>';
         }
-        
         document.getElementById('edit-name').value = user.first_name;
     },
 

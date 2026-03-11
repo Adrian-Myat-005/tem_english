@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Right Profile Trigger -->
-    <div id="main-menu-trigger" class="menu-trigger" style="display: none;">
-        <span>⋮</span>
-    </div>
-
-    <div id="user-profile-trigger" class="profile-trigger" style="display: none;">
-        <img id="user-photo" src="" alt="👤">
+    <!-- Top Right Controls -->
+    <div class="top-controls">
+        <div id="main-menu-trigger" class="menu-trigger" style="display: none;" onclick="ui.toggleMenu()">
+            <span>⋮</span>
+        </div>
+        <div id="user-profile-trigger" class="profile-trigger" style="display: none;" onclick="ui.togglePopup()">
+            <img id="user-photo" src="" alt="👤">
+        </div>
     </div>
 
     <!-- Main Menu Popup -->
@@ -21,7 +22,68 @@
         <div class="popup-content">
             <button class="close-popup" onclick="ui.toggleMenu()">✕</button>
             <div id="menu-container" class="popup-body">
-                <!-- Menu content will be dynamically injected here -->
+                <div class="menu-group">
+                    <button class="tactile-button" onclick="numbers.start()">🔢 Numbers Practice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Numbers Practice Section (Full Screen Overlay) -->
+    <div id="numbers-section" class="full-overlay" style="display: none;">
+        <div class="overlay-header">
+            <button class="back-link" onclick="numbers.close()">← BACK</button>
+            <h2 id="lesson-title">NUMBERS</h2>
+        </div>
+
+        <!-- Lesson Selection -->
+        <div id="lesson-selection" class="lesson-grid">
+            <button class="tactile-button" onclick="numbers.initLesson(1)">2-Digits</button>
+            <button class="tactile-button" onclick="numbers.initLesson(2)">Hundreds</button>
+            <button class="tactile-button" onclick="numbers.initLesson(3)">Thousands</button>
+            <button class="tactile-button" onclick="numbers.initLesson(4)">10-Thousands</button>
+            <button class="tactile-button" onclick="numbers.initLesson(5)">100-Thousands</button>
+            <button class="tactile-button mix-button" onclick="numbers.initLesson(0)">Mix All</button>
+        </div>
+
+        <!-- Flashcard Area -->
+        <div id="flashcard-area" style="display: none;">
+            <div class="flashcard-wrapper">
+                <div id="flashcard" class="flashcard" onclick="numbers.flip()">
+                    <div class="card-face card-front">
+                        <span id="card-number">---</span>
+                    </div>
+                    <div class="card-face card-back">
+                        <span id="card-text">---</span>
+                    </div>
+                </div>
+                
+                <div id="card-controls" class="card-controls" style="visibility: hidden;">
+                    <div class="listen-group">
+                        <button class="tactile-button small-button" onclick="numbers.speak()">🔊 RE-LISTEN</button>
+                    </div>
+                    <div class="score-group">
+                        <button class="tactile-button score-btn fail" onclick="numbers.next(false)">FAIL</button>
+                        <button class="tactile-button score-btn pass" onclick="numbers.next(true)">PASS</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div id="progress-text">1 / 20</div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="result-screen" style="display: none;">
+            <div class="card">
+                <h3>PRACTICE COMPLETE</h3>
+                <div class="final-score" id="final-score">0 / 20</div>
+                <p id="result-msg" class="hero-text">Keep practicing!</p>
+                <button class="tactile-button" onclick="numbers.start()">TRY AGAIN</button>
             </div>
         </div>
     </div>
