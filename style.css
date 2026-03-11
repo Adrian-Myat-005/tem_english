@@ -111,6 +111,31 @@ body {
 
 .popup-body { display: flex; flex-direction: column; gap: 20px; }
 
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* FULL SCREEN OVERLAYS */
 .full-overlay {
     position: fixed;

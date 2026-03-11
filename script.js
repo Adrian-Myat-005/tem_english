@@ -26,6 +26,47 @@
             if (!popup) return;
             const isVisible = popup.style.display === 'flex';
             popup.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible) ui.renderMenu('main');
+        },
+
+        renderMenu: (view) => {
+            const container = ui.get('menu-container');
+            if (!container) return;
+            let html = '';
+
+            switch(view) {
+                case 'main':
+                    html = `
+                        <div class="menu-list">
+                            <button class="tactile-button" onclick="ui.renderMenu('tools')">Tools</button>
+                        </div>
+                    `;
+                    break;
+                case 'tools':
+                    html = `
+                        <div class="menu-header">
+                            <button class="back-button" onclick="ui.renderMenu('main')">←</button>
+                            <span class="member-name">Tools</span>
+                        </div>
+                        <div class="menu-list">
+                            <button class="tactile-button" onclick="ui.renderMenu('beginner_tools')">Beginner Tools</button>
+                        </div>
+                    `;
+                    break;
+                case 'beginner_tools':
+                    html = `
+                        <div class="menu-header">
+                            <button class="back-button" onclick="ui.renderMenu('tools')">←</button>
+                            <span class="member-name">Beginner Tools</span>
+                        </div>
+                        <div class="menu-list">
+                            <button class="tactile-button" onclick="numbers.start()">Numbers</button>
+                            <button class="tactile-button" onclick="days.start()">Days</button>
+                        </div>
+                    `;
+                    break;
+            }
+            container.innerHTML = html;
         },
         
         initListeners: () => {
