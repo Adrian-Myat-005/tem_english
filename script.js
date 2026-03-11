@@ -1,464 +1,366 @@
-// Tem English - Professional Grade Logic (100% Stability)
+// Tem English - Ultimate Stability Logic
+// Professional Grade - 100% Robustness
 
-const BOT_USERNAME = "Tem_english_bot"; 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXWYCkRbEtwsangwPvq5hxfkFoRCIYk_2_D3VDQm26BpoASeVgfkfm_HMu1dY77jTFmg/exec";
+(function() {
+    "use strict";
 
-const ui = {
-    // Utility for safe DOM access
-    get: (id) => document.getElementById(id),
-    
-    togglePopup: () => {
-        const popup = ui.get('profile-popup');
-        if (!popup) return;
-        const isVisible = popup.style.display === 'flex';
-        popup.style.display = isVisible ? 'none' : 'flex';
+    const BOT_USERNAME = "Tem_english_bot"; 
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXWYCkRbEtwsangwPvq5hxfkFoRCIYk_2_D3VDQm26BpoASeVgfkfm_HMu1dY77jTFmg/exec";
+
+    const ui = {
+        get: (id) => document.getElementById(id),
         
-        if (!isVisible) {
-            const input = ui.get('edit-name');
-            if (input) setTimeout(() => input.focus(), 150);
-        }
-    },
-
-    toggleMenu: () => {
-        const popup = ui.get('main-menu-popup');
-        if (!popup) return;
-        const isVisible = popup.style.display === 'flex';
-        popup.style.display = isVisible ? 'none' : 'flex';
-    },
-    
-    initListeners: () => {
-        window.addEventListener('click', (e) => {
-            const profilePopup = ui.get('profile-popup');
-            const menuPopup = ui.get('main-menu-popup');
-            if (e.target === profilePopup) ui.togglePopup();
-            if (e.target === menuPopup) ui.toggleMenu();
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (ui.get('profile-popup')?.style.display === 'flex') ui.togglePopup();
-                if (ui.get('main-menu-popup')?.style.display === 'flex') ui.toggleMenu();
+        togglePopup: () => {
+            const popup = ui.get('profile-popup');
+            if (!popup) return;
+            const isVisible = popup.style.display === 'flex';
+            popup.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible) {
+                const input = ui.get('edit-name');
+                if (input) setTimeout(() => input.focus(), 150);
             }
-        });
-    },
+        },
 
-    initSlider: async () => {
-        const track = ui.get('member-slider-track');
-        const countBadge = ui.get('member-count');
-        const sliderSection = ui.get('member-slider-section');
-        if (!track || !countBadge || !sliderSection) return;
-
-        try {
-            const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_students`);
-            const members = await response.json();
-            
-            if (!members || members.length === 0) {
-                sliderSection.style.display = 'none';
-                return;
-            }
-
-            countBadge.textContent = `${members.length} MEMBERS JOINED`;
-            
-            // Triple clone for infinite scroll smoothness
-            const displayMembers = [...members, ...members, ...members];
-            track.innerHTML = displayMembers.map(m => `
-                <div class="member-profile">
-                    <div class="member-photo-frame">
-                        ${m.photo ? `<img src="${m.photo}" alt="${m.name}" onerror="this.src=''; this.parentElement.innerHTML='<span class=\'member-symbol\'>👤</span>'">` : `<span class="member-symbol">👤</span>`}
-                    </div>
-                    <span class="member-name">${(m.name || 'User').split(' ')[0]}</span>
-                </div>
-            `).join('');
-
-            const duration = Math.max(15, members.length * 4);
-            track.style.animationDuration = `${duration}s`;
-        } catch (e) {
-            sliderSection.style.display = 'none';
-        }
-    }
-};
-
-const days = {
-    currentQuestion: null,
-    currentIndex: 0,
-    score: 0,
-    level: 0,
-    allDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-
-    start: () => {
-        const section = ui.get('days-section');
-        if (!section) return;
-        section.style.display = 'flex';
-        ui.get('days-lesson-selection').style.display = 'grid';
-        ui.get('days-practice-area').style.display = 'none';
-        ui.get('days-result-screen').style.display = 'none';
-        ui.get('days-title').textContent = 'DAYS PRACTICE';
-        ui.toggleMenu();
-    },
-
-    close: () => {
-        const section = ui.get('days-section');
-        if (section) section.style.display = 'none';
-        window.speechSynthesis.cancel();
-    },
-
-    initLesson: (level) => {
-        days.currentIndex = 0;
-        days.score = 0;
-        days.level = level; 
-
-        const titles = ["MIXED ALL", "TOMORROW (+1)", "YESTERDAY (-1)"];
-        ui.get('days-lesson-selection').style.display = 'none';
-        ui.get('days-practice-area').style.display = 'block';
-        ui.get('days-title').textContent = titles[level] || "DAYS";
-
-        days.nextQuestion();
-    },
-
-    nextQuestion: () => {
-        const todayIndex = Math.floor(Math.random() * 7);
-        const today = days.allDays[todayIndex];
+        toggleMenu: () => {
+            const popup = ui.get('main-menu-popup');
+            if (!popup) return;
+            const isVisible = popup.style.display === 'flex';
+            popup.style.display = isVisible ? 'none' : 'flex';
+        },
         
-        let relation;
-        if (days.level === 1) relation = "tomorrow";
-        else if (days.level === 2) relation = "yesterday";
-        else relation = Math.random() > 0.5 ? "tomorrow" : "yesterday";
+        initListeners: () => {
+            window.addEventListener('click', (e) => {
+                const profilePopup = ui.get('profile-popup');
+                const menuPopup = ui.get('main-menu-popup');
+                if (e.target === profilePopup) ui.togglePopup();
+                if (e.target === menuPopup) ui.toggleMenu();
+            });
 
-        let correctIndex;
-        if (relation === "tomorrow") {
-            correctIndex = (todayIndex + 1) % 7;
-        } else {
-            correctIndex = (todayIndex - 1 + 7) % 7;
-        }
-
-        const correctAnswer = days.allDays[correctIndex];
-        const options = [correctAnswer];
-        while (options.length < 4) {
-            const randomDay = days.allDays[Math.floor(Math.random() * 7)];
-            if (!options.includes(randomDay)) options.push(randomDay);
-        }
-        options.sort(() => 0.5 - Math.random());
-
-        days.currentQuestion = {
-            today: today,
-            relation: relation,
-            answer: correctAnswer,
-            options: options,
-            text: `Today is ${today}. What day is ${relation}?`
-        };
-
-        days.renderQuestion();
-        setTimeout(() => days.speakQuestion(), 400);
-    },
-
-    renderQuestion: () => {
-        const container = ui.get('days-options');
-        if (!container) return;
-        
-        container.classList.remove('locked');
-        container.innerHTML = days.currentQuestion.options.map(opt => `
-            <button class="tactile-button" onclick="days.checkAnswer(this, '${opt}')">${opt}</button>
-        `).join('');
-
-        const progress = ((days.currentIndex + 1) / 10) * 100;
-        const fill = ui.get('days-progress-fill');
-        const text = ui.get('days-progress-text');
-        if (fill) fill.style.width = `${progress}%`;
-        if (text) text.textContent = `${days.currentIndex + 1} / 10`;
-    },
-
-    speakQuestion: () => {
-        if (!days.currentQuestion) return;
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(days.currentQuestion.text);
-        msg.lang = 'en-US';
-        msg.rate = 0.7; // Professional beginner pace
-        window.speechSynthesis.speak(msg);
-    },
-
-    checkAnswer: (btn, choice) => {
-        const container = ui.get('days-options');
-        if (!container || container.classList.contains('locked')) return;
-        container.classList.add('locked');
-
-        const isCorrect = choice === days.currentQuestion.answer;
-        if (isCorrect) {
-            days.score++;
-            btn.classList.add('option-correct');
-        } else {
-            btn.classList.add('option-incorrect');
-            Array.from(container.children).forEach(child => {
-                if (child.textContent === days.currentQuestion.answer) {
-                    child.classList.add('option-correct');
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (ui.get('profile-popup')?.style.display === 'flex') ui.togglePopup();
+                    if (ui.get('main-menu-popup')?.style.display === 'flex') ui.toggleMenu();
                 }
             });
-        }
+        },
 
-        setTimeout(() => {
-            days.currentIndex++;
-            if (days.currentIndex < 10) {
-                days.nextQuestion();
-            } else {
-                days.showResult();
-            }
-        }, 1200);
-    },
+        initSlider: async () => {
+            const track = ui.get('member-slider-track');
+            const countBadge = ui.get('member-count');
+            const sliderSection = ui.get('member-slider-section');
+            if (!track || !countBadge || !sliderSection) return;
 
-    showResult: () => {
-        ui.get('days-practice-area').style.display = 'none';
-        ui.get('days-result-screen').style.display = 'block';
-        ui.get('days-final-score').textContent = `${days.score} / 10`;
-        
-        let msg = "Keep practicing!";
-        if (days.score === 10) msg = "PERFECT! You are a master of days.";
-        else if (days.score >= 8) msg = "Excellent! You've almost got it!";
-        ui.get('days-result-msg').textContent = msg;
-    }
-};
-
-const numbers = {
-    currentLesson: [],
-    currentIndex: 0,
-    score: 0,
-    isFlipped: false,
-
-    start: () => {
-        const section = ui.get('numbers-section');
-        if (!section) return;
-        section.style.display = 'flex';
-        ui.get('lesson-selection').style.display = 'grid';
-        ui.get('flashcard-area').style.display = 'none';
-        ui.get('result-screen').style.display = 'none';
-        ui.get('lesson-title').textContent = 'NUMBERS PRACTICE';
-        ui.toggleMenu();
-    },
-
-    close: () => {
-        const section = ui.get('numbers-section');
-        if (section) section.style.display = 'none';
-        window.speechSynthesis.cancel();
-    },
-
-    initLesson: (level) => {
-        const pool = [];
-        const titles = ["MIXED ALL", "2-DIGITS", "HUNDREDS", "THOUSANDS", "10-THOUSANDS", "100-THOUSANDS"];
-        
-        while (pool.length < 100) {
-            let num;
-            switch(level) {
-                case 1: num = Math.floor(10 + Math.random() * 90); break;
-                case 2: num = Math.floor(100 + Math.random() * 900); break;
-                case 3: num = Math.floor(1000 + Math.random() * 9000); break;
-                case 4: num = Math.floor(10000 + Math.random() * 90000); break;
-                case 5: num = Math.floor(100000 + Math.random() * 900000); break;
-                default: num = Math.floor(10 + Math.random() * 999990); break;
-            }
-            if (!pool.includes(num)) pool.push(num);
-        }
-
-        numbers.currentLesson = pool.sort(() => 0.5 - Math.random()).slice(0, 20);
-        numbers.currentIndex = 0;
-        numbers.score = 0;
-        numbers.isFlipped = false;
-
-        ui.get('lesson-selection').style.display = 'none';
-        ui.get('flashcard-area').style.display = 'block';
-        ui.get('lesson-title').textContent = titles[level] || "NUMBERS";
-        
-        numbers.showCard();
-    },
-
-    showCard: () => {
-        const num = numbers.currentLesson[numbers.currentIndex];
-        const flashcard = ui.get('flashcard');
-        if (!flashcard) return;
-        
-        numbers.isFlipped = false;
-        flashcard.classList.remove('flipped');
-        ui.get('card-controls').style.visibility = 'hidden';
-        ui.get('card-number').textContent = num.toLocaleString();
-        ui.get('card-text').textContent = numbers.toWords(num);
-        
-        const progress = ((numbers.currentIndex + 1) / 20) * 100;
-        const fill = ui.get('progress-fill');
-        const text = ui.get('progress-text');
-        if (fill) fill.style.width = `${progress}%`;
-        if (text) text.textContent = `${numbers.currentIndex + 1} / 20`;
-    },
-
-    flip: () => {
-        if (numbers.isFlipped) return;
-        numbers.isFlipped = true;
-        const card = ui.get('flashcard');
-        if (card) card.classList.add('flipped');
-        ui.get('card-controls').style.visibility = 'visible';
-        setTimeout(() => numbers.speak(), 350);
-    },
-
-    next: (isPass) => {
-        if (isPass) numbers.score++;
-        numbers.currentIndex++;
-        
-        if (numbers.currentIndex < 20) {
-            numbers.showCard();
-        } else {
-            numbers.showResult();
-        }
-    },
-
-    showResult: () => {
-        ui.get('flashcard-area').style.display = 'none';
-        ui.get('result-screen').style.display = 'block';
-        ui.get('final-score').textContent = `${numbers.score} / 20`;
-        
-        let msg = "Keep practicing!";
-        if (numbers.score === 20) msg = "PERFECT! Absolute mastery.";
-        else if (numbers.score >= 16) msg = "Great job! You're getting fast!";
-        ui.get('result-msg').textContent = msg;
-    },
-
-    toWords: (n) => {
-        const ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-        const teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
-        const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-        
-        const convert = (num) => {
-            if (num === 0) return "zero";
-            if (num < 10) return ones[num];
-            if (num < 20) return teens[num - 10];
-            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? "-" + ones[num % 10] : "");
-            if (num < 1000) return ones[Math.floor(num / 100)] + " hundred" + (num % 100 !== 0 ? " and " + convert(num % 100) : "");
-            if (num < 1000000) return convert(Math.floor(num / 1000)) + " thousand" + (num % 1000 !== 0 ? (num % 1000 < 100 ? " and " : " ") + convert(num % 1000) : "");
-            return num.toString();
-        };
-        return convert(n);
-    },
-
-    speak: () => {
-        const text = ui.get('card-text')?.textContent;
-        if (!text) return;
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US';
-        msg.rate = 0.8; 
-        window.speechSynthesis.speak(msg);
-    }
-};
-
-const auth = {
-    onTelegramAuth: (user) => {
-        if (user) {
-            localStorage.setItem('logged_user', JSON.stringify(user));
-            auth.registerStudent(user); 
-            auth.showMemberArea(user);
-        }
-    },
-
-    registerStudent: (user) => {
-        const photo = user.photo_url || '';
-        const query = `id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}&photo_url=${encodeURIComponent(photo)}`;
-        fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' })
-            .catch(e => console.error('Silent fail:', e));
-    },
-
-    updateName: () => {
-        const userStr = localStorage.getItem('logged_user');
-        if (!userStr) return;
-        const user = JSON.parse(userStr);
-        const newName = ui.get('edit-name')?.value.trim();
-        if (!newName) return;
-        
-        const btn = document.querySelector('.edit-name-group .tactile-button');
-        if (btn) {
-            btn.textContent = 'Updating...';
-            btn.disabled = true;
-        }
-
-        fetch(`${GOOGLE_SCRIPT_URL}?type=update_name&id=${user.id}&new_name=${encodeURIComponent(newName)}`, { mode: 'no-cors' })
-            .then(() => {
-                user.first_name = newName;
-                localStorage.setItem('logged_user', JSON.stringify(user));
-                if (btn) btn.textContent = 'Confirmed';
-                setTimeout(() => {
-                    ui.togglePopup();
-                    if (btn) {
-                        btn.textContent = 'Confirm Update';
-                        btn.disabled = false;
-                    }
-                }, 600);
-            })
-            .catch(() => {
-                if (btn) {
-                    btn.textContent = 'Confirm Update';
-                    btn.disabled = false;
-                }
-            });
-    },
-
-    showMemberArea: (user) => {
-        ui.get('auth-section').style.display = 'none';
-        ui.get('member-slider-section').style.display = 'none';
-        ui.get('member-area').style.display = 'block';
-        
-        const menuTrigger = ui.get('main-menu-trigger');
-        if (menuTrigger) {
-            menuTrigger.style.display = 'flex';
-            menuTrigger.onclick = ui.toggleMenu;
-        }
-
-        const profileTrigger = ui.get('user-profile-trigger');
-        if (profileTrigger) {
-            profileTrigger.style.display = 'flex';
-            profileTrigger.onclick = ui.togglePopup;
-
-            const photo = ui.get('user-photo');
-            if (user.photo_url && photo) {
-                photo.src = user.photo_url;
-                photo.style.display = 'block';
-            } else if (photo) {
-                photo.style.display = 'none';
-                profileTrigger.innerHTML = '<span style="font-size: 1.2rem;">👤</span>';
-            }
-        }
-        const input = ui.get('edit-name');
-        if (input) input.value = user.first_name;
-    },
-
-    logout: () => {
-        localStorage.removeItem('logged_user');
-        window.location.reload();
-    },
-
-    loadWidget: () => {
-        const container = ui.get('telegram-login-container');
-        if (!container) return;
-
-        const script = document.createElement('script');
-        script.src = "https://telegram.org/js/telegram-widget.js?22";
-        script.setAttribute('data-telegram-login', BOT_USERNAME);
-        script.setAttribute('data-size', 'large');
-        script.setAttribute('data-radius', '0'); 
-        script.setAttribute('data-onauth', 'auth.onTelegramAuth(user)');
-        script.setAttribute('data-request-access', 'write');
-        container.appendChild(script);
-    },
-
-    init: () => {
-        ui.initListeners();
-        const loggedUser = localStorage.getItem('logged_user');
-        if (loggedUser) {
             try {
-                auth.showMemberArea(JSON.parse(loggedUser));
-            } catch(e) {
-                localStorage.removeItem('logged_user');
-                auth.loadWidget();
-                ui.initSlider();
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_students`);
+                const members = await response.json();
+                if (!members || members.length === 0) {
+                    sliderSection.style.display = 'none';
+                    return;
+                }
+                countBadge.textContent = `${members.length} MEMBERS JOINED`;
+                const displayMembers = [...members, ...members, ...members];
+                track.innerHTML = displayMembers.map(m => `
+                    <div class="member-profile">
+                        <div class="member-photo-frame">
+                            ${m.photo ? `<img src="${m.photo}" alt="${m.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                            <span class="member-symbol" style="display: ${m.photo ? 'none' : 'block'}">👤</span>
+                        </div>
+                        <span class="member-name">${(m.name || 'User').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+                const duration = Math.max(15, members.length * 4);
+                track.style.animationDuration = `${duration}s`;
+            } catch (e) {
+                sliderSection.style.display = 'none';
             }
-        } else {
-            auth.loadWidget();
-            ui.initSlider();
         }
-    }
-};
+    };
 
-document.addEventListener('DOMContentLoaded', auth.init);
+    const days = {
+        currentQuestion: null,
+        currentIndex: 0,
+        score: 0,
+        level: 0,
+        allDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+
+        start: () => {
+            const section = ui.get('days-section');
+            if (!section) return;
+            section.style.display = 'flex';
+            ui.get('days-lesson-selection').style.display = 'grid';
+            ui.get('days-practice-area').style.display = 'none';
+            ui.get('days-result-screen').style.display = 'none';
+            ui.get('days-title').textContent = 'DAYS PRACTICE';
+            ui.toggleMenu();
+        },
+
+        close: () => {
+            const section = ui.get('days-section');
+            if (section) section.style.display = 'none';
+            window.speechSynthesis.cancel();
+        },
+
+        initLesson: (level) => {
+            days.currentIndex = 0;
+            days.score = 0;
+            days.level = level; 
+            const titles = ["MIXED ALL", "TOMORROW (+1)", "YESTERDAY (-1)"];
+            ui.get('days-lesson-selection').style.display = 'none';
+            ui.get('days-practice-area').style.display = 'block';
+            ui.get('days-title').textContent = titles[level] || "DAYS";
+            days.nextQuestion();
+        },
+
+        nextQuestion: () => {
+            const todayIndex = Math.floor(Math.random() * 7);
+            const today = days.allDays[todayIndex];
+            let relation = days.level === 1 ? "tomorrow" : (days.level === 2 ? "yesterday" : (Math.random() > 0.5 ? "tomorrow" : "yesterday"));
+            let correctIndex = relation === "tomorrow" ? (todayIndex + 1) % 7 : (todayIndex - 1 + 7) % 7;
+            const correctAnswer = days.allDays[correctIndex];
+            const options = [correctAnswer];
+            while (options.length < 4) {
+                const randomDay = days.allDays[Math.floor(Math.random() * 7)];
+                if (!options.includes(randomDay)) options.push(randomDay);
+            }
+            options.sort(() => 0.5 - Math.random());
+            days.currentQuestion = { today, relation, answer: correctAnswer, options, text: `Today is ${today}. What day is ${relation}?` };
+            days.renderQuestion();
+            setTimeout(() => days.speakQuestion(), 400);
+        },
+
+        renderQuestion: () => {
+            const container = ui.get('days-options');
+            if (!container) return;
+            container.classList.remove('locked');
+            container.innerHTML = days.currentQuestion.options.map(opt => `
+                <button class="tactile-button" onclick="days.checkAnswer(this, '${opt}')">${opt}</button>
+            `).join('');
+            const progress = ((days.currentIndex + 1) / 10) * 100;
+            if (ui.get('days-progress-fill')) ui.get('days-progress-fill').style.width = `${progress}%`;
+            if (ui.get('days-progress-text')) ui.get('days-progress-text').textContent = `${days.currentIndex + 1} / 10`;
+        },
+
+        speakQuestion: () => {
+            if (!days.currentQuestion) return;
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(days.currentQuestion.text);
+            msg.lang = 'en-US';
+            msg.rate = 0.7; 
+            window.speechSynthesis.speak(msg);
+        },
+
+        checkAnswer: (btn, choice) => {
+            const container = ui.get('days-options');
+            if (!container || container.classList.contains('locked')) return;
+            container.classList.add('locked');
+            const isCorrect = choice === days.currentQuestion.answer;
+            if (isCorrect) {
+                days.score++;
+                btn.classList.add('option-correct');
+            } else {
+                btn.classList.add('option-incorrect');
+                Array.from(container.children).forEach(child => {
+                    if (child.textContent === days.currentQuestion.answer) child.classList.add('option-correct');
+                });
+            }
+            setTimeout(() => {
+                days.currentIndex++;
+                if (days.currentIndex < 10) days.nextQuestion();
+                else days.showResult();
+            }, 1200);
+        },
+
+        showResult: () => {
+            ui.get('days-practice-area').style.display = 'none';
+            ui.get('days-result-screen').style.display = 'block';
+            ui.get('days-final-score').textContent = `${days.score} / 10`;
+            let msg = days.score === 10 ? "PERFECT! You are a master of days." : (days.score >= 8 ? "Excellent! You've almost got it!" : "Keep practicing!");
+            ui.get('days-result-msg').textContent = msg;
+        }
+    };
+
+    const numbers = {
+        currentLesson: [], currentIndex: 0, score: 0, isFlipped: false,
+
+        start: () => {
+            const section = ui.get('numbers-section');
+            if (!section) return;
+            section.style.display = 'flex';
+            ui.get('lesson-selection').style.display = 'grid';
+            ui.get('flashcard-area').style.display = 'none';
+            ui.get('result-screen').style.display = 'none';
+            ui.get('lesson-title').textContent = 'NUMBERS PRACTICE';
+            ui.toggleMenu();
+        },
+
+        close: () => {
+            const section = ui.get('numbers-section');
+            if (section) section.style.display = 'none';
+            window.speechSynthesis.cancel();
+        },
+
+        initLesson: (level) => {
+            const pool = [];
+            const titles = ["MIXED ALL", "2-DIGITS", "HUNDREDS", "THOUSANDS", "10-THOUSANDS", "100-THOUSANDS"];
+            while (pool.length < 100) {
+                let num;
+                switch(level) {
+                    case 1: num = Math.floor(10 + Math.random() * 90); break;
+                    case 2: num = Math.floor(100 + Math.random() * 900); break;
+                    case 3: num = Math.floor(1000 + Math.random() * 9000); break;
+                    case 4: num = Math.floor(10000 + Math.random() * 90000); break;
+                    case 5: num = Math.floor(100000 + Math.random() * 900000); break;
+                    default: num = Math.floor(10 + Math.random() * 999990); break;
+                }
+                if (!pool.includes(num)) pool.push(num);
+            }
+            numbers.currentLesson = pool.sort(() => 0.5 - Math.random()).slice(0, 20);
+            numbers.currentIndex = 0; numbers.score = 0; numbers.isFlipped = false;
+            ui.get('lesson-selection').style.display = 'none';
+            ui.get('flashcard-area').style.display = 'block';
+            ui.get('lesson-title').textContent = titles[level] || "NUMBERS";
+            numbers.showCard();
+        },
+
+        showCard: () => {
+            const num = numbers.currentLesson[numbers.currentIndex];
+            const flashcard = ui.get('flashcard');
+            if (!flashcard) return;
+            numbers.isFlipped = false;
+            flashcard.classList.remove('flipped');
+            ui.get('card-controls').style.visibility = 'hidden';
+            ui.get('card-number').textContent = num.toLocaleString();
+            ui.get('card-text').textContent = numbers.toWords(num);
+            const progress = ((numbers.currentIndex + 1) / 20) * 100;
+            if (ui.get('progress-fill')) ui.get('progress-fill').style.width = `${progress}%`;
+            if (ui.get('progress-text')) ui.get('progress-text').textContent = `${numbers.currentIndex + 1} / 20`;
+        },
+
+        flip: () => {
+            if (numbers.isFlipped) return;
+            numbers.isFlipped = true;
+            ui.get('flashcard')?.classList.add('flipped');
+            ui.get('card-controls').style.visibility = 'visible';
+            setTimeout(() => numbers.speak(), 350);
+        },
+
+        next: (isPass) => {
+            if (isPass) numbers.score++;
+            numbers.currentIndex++;
+            if (numbers.currentIndex < 20) numbers.showCard();
+            else numbers.showResult();
+        },
+
+        showResult: () => {
+            ui.get('flashcard-area').style.display = 'none';
+            ui.get('result-screen').style.display = 'block';
+            ui.get('final-score').textContent = `${numbers.score} / 20`;
+            let msg = numbers.score === 20 ? "PERFECT! Absolute mastery." : (numbers.score >= 16 ? "Great job! You're getting fast!" : "Keep practicing!");
+            ui.get('result-msg').textContent = msg;
+        },
+
+        toWords: (n) => {
+            const ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+            const teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+            const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+            const convert = (num) => {
+                if (num === 0) return "zero";
+                if (num < 10) return ones[num];
+                if (num < 20) return teens[num - 10];
+                if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? "-" + ones[num % 10] : "");
+                if (num < 1000) return ones[Math.floor(num / 100)] + " hundred" + (num % 100 !== 0 ? " and " + convert(num % 100) : "");
+                if (num < 1000000) return convert(Math.floor(num / 1000)) + " thousand" + (num % 1000 !== 0 ? (num % 1000 < 100 ? " and " : " ") + convert(num % 1000) : "");
+                return num.toString();
+            };
+            return convert(n);
+        },
+
+        speak: () => {
+            const text = ui.get('card-text')?.textContent;
+            if (!text) return;
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            msg.rate = 0.8; 
+            window.speechSynthesis.speak(msg);
+        }
+    };
+
+    const auth = {
+        onTelegramAuth: (user) => {
+            if (user) {
+                localStorage.setItem('logged_user', JSON.stringify(user));
+                auth.registerStudent(user); 
+                auth.showMemberArea(user);
+            }
+        },
+
+        registerStudent: (user) => {
+            const query = `id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}&photo_url=${encodeURIComponent(user.photo_url || '')}`;
+            fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' }).catch(() => {});
+        },
+
+        updateName: () => {
+            const user = JSON.parse(localStorage.getItem('logged_user') || '{}');
+            const newName = ui.get('edit-name')?.value.trim();
+            if (!newName || !user.id) return;
+            const btn = document.querySelector('.edit-name-group .tactile-button');
+            if (btn) { btn.textContent = 'Updating...'; btn.disabled = true; }
+            fetch(`${GOOGLE_SCRIPT_URL}?type=update_name&id=${user.id}&new_name=${encodeURIComponent(newName)}`, { mode: 'no-cors' })
+                .then(() => {
+                    user.first_name = newName;
+                    localStorage.setItem('logged_user', JSON.stringify(user));
+                    if (btn) btn.textContent = 'Confirmed';
+                    setTimeout(() => { ui.togglePopup(); if (btn) { btn.textContent = 'Confirm Update'; btn.disabled = false; } }, 600);
+                }).catch(() => { if (btn) { btn.textContent = 'Confirm Update'; btn.disabled = false; } });
+        },
+
+        showMemberArea: (user) => {
+            if (ui.get('auth-section')) ui.get('auth-section').style.display = 'none';
+            if (ui.get('member-slider-section')) ui.get('member-slider-section').style.display = 'none';
+            if (ui.get('member-area')) ui.get('member-area').style.display = 'block';
+            if (ui.get('main-menu-trigger')) { ui.get('main-menu-trigger').style.display = 'flex'; ui.get('main-menu-trigger').onclick = ui.toggleMenu; }
+            const pt = ui.get('user-profile-trigger');
+            if (pt) {
+                pt.style.display = 'flex'; pt.onclick = ui.togglePopup;
+                const photo = ui.get('user-photo');
+                if (user.photo_url && photo) { photo.src = user.photo_url; photo.style.display = 'block'; }
+                else if (photo) { photo.style.display = 'none'; pt.innerHTML = '<span style="font-size: 1.2rem;">👤</span>'; }
+            }
+            if (ui.get('edit-name')) ui.get('edit-name').value = user.first_name;
+        },
+
+        logout: () => { localStorage.removeItem('logged_user'); window.location.reload(); },
+
+        loadWidget: () => {
+            const container = ui.get('telegram-login-container');
+            if (!container) return;
+            const script = document.createElement('script');
+            script.src = "https://telegram.org/js/telegram-widget.js?22";
+            script.setAttribute('data-telegram-login', BOT_USERNAME);
+            script.setAttribute('data-size', 'large');
+            script.setAttribute('data-radius', '0'); 
+            script.setAttribute('data-onauth', 'auth.onTelegramAuth(user)');
+            script.setAttribute('data-request-access', 'write');
+            container.appendChild(script);
+        },
+
+        init: () => {
+            ui.initListeners();
+            const loggedUser = localStorage.getItem('logged_user');
+            if (loggedUser) {
+                try { auth.showMemberArea(JSON.parse(loggedUser)); }
+                catch(e) { localStorage.removeItem('logged_user'); auth.loadWidget(); ui.initSlider(); }
+            } else { auth.loadWidget(); ui.initSlider(); }
+        }
+    };
+
+    // EXPOSE TO GLOBAL SCOPE FOR HTML ONCLICK
+    window.ui = ui;
+    window.days = days;
+    window.numbers = numbers;
+    window.auth = auth;
+
+    document.addEventListener('DOMContentLoaded', auth.init);
+
+})();
