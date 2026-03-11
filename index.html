@@ -24,7 +24,57 @@
             <div id="menu-container" class="popup-body">
                 <div class="menu-group">
                     <button class="tactile-button" onclick="numbers.start()">🔢 Numbers Practice</button>
+                    <button class="tactile-button" onclick="days.start()">🗓️ Days Practice</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Days Practice Section (Full Screen Overlay) -->
+    <div id="days-section" class="full-overlay" style="display: none;">
+        <div class="overlay-header">
+            <button class="back-link" onclick="days.close()">← BACK</button>
+            <h2 id="days-title">DAYS</h2>
+        </div>
+
+        <!-- Lesson Selection -->
+        <div id="days-lesson-selection" class="lesson-grid">
+            <button class="tactile-button" onclick="days.initLesson(1)">Tomorrow (+1)</button>
+            <button class="tactile-button" onclick="days.initLesson(2)">Yesterday (-1)</button>
+            <button class="tactile-button mix-button" onclick="days.initLesson(0)">Mixed All</button>
+        </div>
+
+        <!-- Practice Area -->
+        <div id="days-practice-area" style="display: none;">
+            <div class="listening-box">
+                <div class="audio-waves">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
+                <button class="tactile-button" onclick="days.speakQuestion()">🔊 RE-LISTEN</button>
+                <p class="hero-text">Listen and select the correct day.</p>
+            </div>
+
+            <div id="days-options" class="options-grid">
+                <!-- 4 Options injected here -->
+            </div>
+
+            <div class="progress-container">
+                <div id="days-progress-text">1 / 10</div>
+                <div class="progress-bar">
+                    <div id="days-progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="days-result-screen" class="result-screen" style="display: none;">
+            <div class="card">
+                <h3>PRACTICE COMPLETE</h3>
+                <div class="final-score" id="days-final-score">0 / 10</div>
+                <p id="days-result-msg" class="hero-text">Keep practicing!</p>
+                <button class="tactile-button" onclick="days.start()">TRY AGAIN</button>
             </div>
         </div>
     </div>

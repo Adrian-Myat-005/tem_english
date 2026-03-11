@@ -73,6 +73,135 @@ const ui = {
     }
 };
 
+const days = {
+    currentQuestion: null,
+    currentIndex: 0,
+    score: 0,
+    allDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+
+    start: () => {
+        document.getElementById('days-section').style.display = 'flex';
+        document.getElementById('days-lesson-selection').style.display = 'grid';
+        document.getElementById('days-practice-area').style.display = 'none';
+        document.getElementById('days-result-screen').style.display = 'none';
+        document.getElementById('days-title').textContent = 'DAYS';
+        const menu = document.getElementById('main-menu-popup');
+        if (menu.style.display === 'flex') ui.toggleMenu();
+    },
+
+    close: () => {
+        document.getElementById('days-section').style.display = 'none';
+    },
+
+    initLesson: (level) => {
+        days.currentIndex = 0;
+        days.score = 0;
+        days.level = level; // 1: Tomorrow, 2: Yesterday, 0: Mixed
+
+        const titles = ["MIXED ALL", "TOMORROW (+1)", "YESTERDAY (-1)"];
+        document.getElementById('days-lesson-selection').style.display = 'none';
+        document.getElementById('days-practice-area').style.display = 'block';
+        document.getElementById('days-title').textContent = titles[level];
+
+        days.nextQuestion();
+    },
+
+    nextQuestion: () => {
+        const todayIndex = Math.floor(Math.random() * 7);
+        const today = days.allDays[todayIndex];
+        
+        let relation;
+        if (days.level === 1) relation = "tomorrow";
+        else if (days.level === 2) relation = "yesterday";
+        else relation = Math.random() > 0.5 ? "tomorrow" : "yesterday";
+
+        let correctIndex;
+        if (relation === "tomorrow") {
+            correctIndex = (todayIndex + 1) % 7;
+        } else {
+            correctIndex = (todayIndex - 1 + 7) % 7;
+        }
+
+        const correctAnswer = days.allDays[correctIndex];
+        
+        // Generate 4 options
+        const options = [correctAnswer];
+        while (options.length < 4) {
+            const randomDay = days.allDays[Math.floor(Math.random() * 7)];
+            if (!options.includes(randomDay)) options.push(randomDay);
+        }
+        options.sort(() => 0.5 - Math.random());
+
+        days.currentQuestion = {
+            today: today,
+            relation: relation,
+            answer: correctAnswer,
+            options: options,
+            text: `Today is ${today}. What day is ${relation}?`
+        };
+
+        days.renderQuestion();
+        setTimeout(() => days.speakQuestion(), 500);
+    },
+
+    renderQuestion: () => {
+        const optionsContainer = document.getElementById('days-options');
+        optionsContainer.innerHTML = days.currentQuestion.options.map(opt => `
+            <button class="tactile-button" onclick="days.checkAnswer(this, '${opt}')">${opt}</button>
+        `).join('');
+
+        const progress = ((days.currentIndex + 1) / 10) * 100;
+        document.getElementById('days-progress-fill').style.width = `${progress}%`;
+        document.getElementById('days-progress-text').textContent = `${days.currentIndex + 1} / 10`;
+    },
+
+    speakQuestion: () => {
+        const msg = new SpeechSynthesisUtterance(days.currentQuestion.text);
+        msg.lang = 'en-US';
+        msg.rate = 0.75; // Slower for beginners
+        window.speechSynthesis.speak(msg);
+    },
+
+    checkAnswer: (btn, choice) => {
+        if (btn.parentElement.classList.contains('locked')) return;
+        btn.parentElement.classList.add('locked');
+
+        const isCorrect = choice === days.currentQuestion.answer;
+        if (isCorrect) {
+            days.score++;
+            btn.classList.add('option-correct');
+        } else {
+            btn.classList.add('option-incorrect');
+            // Show correct one
+            Array.from(btn.parentElement.children).forEach(child => {
+                if (child.textContent === days.currentQuestion.answer) {
+                    child.classList.add('option-correct');
+                }
+            });
+        }
+
+        setTimeout(() => {
+            days.currentIndex++;
+            if (days.currentIndex < 10) {
+                days.nextQuestion();
+            } else {
+                days.showResult();
+            }
+        }, 1500);
+    },
+
+    showResult: () => {
+        document.getElementById('days-practice-area').style.display = 'none';
+        document.getElementById('days-result-screen').style.display = 'block';
+        document.getElementById('days-final-score').textContent = `${days.score} / 10`;
+        
+        let msg = "Keep practicing!";
+        if (days.score === 10) msg = "PERFECT! You're a days expert!";
+        else if (days.score > 7) msg = "Great job! Almost perfect!";
+        document.getElementById('days-result-msg').textContent = msg;
+    }
+};
+
 const numbers = {
     currentLesson: [],
     currentIndex: 0,
