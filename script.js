@@ -189,7 +189,19 @@
                 container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">NO RECENT UPDATES</p></div>';
                 return;
             }
-            container.innerHTML = posts.map(post => `
+            container.innerHTML = posts.map(post => {
+                const youtubeId = blog.getYoutubeId(post.image);
+                const mediaHtml = youtubeId ? `
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/${youtubeId}" allowfullscreen></iframe>
+                    </div>
+                ` : `
+                    <div class="post-image-container">
+                        <img src="${post.image}" alt="Update Image" onerror="this.src='https://placehold.co/400x400?text=IMAGE+EXPIRED'">
+                    </div>
+                `;
+
+                return `
                 <div class="feed-post card">
                     <div class="post-header">
                         <div class="post-user-photo" style="background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden;">
@@ -200,14 +212,19 @@
                             <span class="post-time">${post.date}</span>
                         </div>
                     </div>
-                    <div class="post-image-container">
-                        <img src="${post.image}" alt="Update Image" onerror="this.src='https://placehold.co/400x400?text=IMAGE+EXPIRED'">
-                    </div>
+                    ${mediaHtml}
                     <div class="post-caption" style="padding: 20px 15px;">
                         ${post.caption.replace(/\n/g, '<br>')}
                     </div>
                 </div>
-            `).join('');
+            `;}).join('');
+        },
+
+        getYoutubeId: (url) => {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
         }
     };
 

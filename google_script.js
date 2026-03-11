@@ -38,6 +38,19 @@ function doPost(e) {
     return sendMessage(chatId, "✅ *Blog Post Published!*", mainMenuMarkup());
   }
 
+  // Handle Text-only Posts (YouTube Links or Announcements)
+  if (text && !text.startsWith("/")) {
+    let posts = JSON.parse(store.getProperty('blog_posts') || "[]");
+    posts.unshift({
+      id: Date.now().toString(),
+      image: text, // Store the text/link as the 'image' source
+      caption: text.includes("youtube.com") || text.includes("youtu.be") ? "Video Update" : text,
+      date: new Date().toLocaleDateString()
+    });
+    store.setProperty('blog_posts', JSON.stringify(posts.slice(0, 20)));
+    return sendMessage(chatId, "✅ *Text/Video Post Published!*", mainMenuMarkup());
+  }
+
   if (text === "/start" || text === "Menu") {
     sendMenu(chatId);
   } else if (text === "/manage_blog") {
