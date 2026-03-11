@@ -36,14 +36,14 @@ body {
     max-width: 480px;
     width: 100%;
     position: relative;
-    padding: 80px 0 40px; /* Space for fixed controls */
+    padding: 30px 0;
 }
 
 /* TOP CONTROLS */
 .top-controls {
-    position: fixed;
-    top: max(20px, env(safe-area-inset-top));
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
     display: flex;
     gap: 12px;
     z-index: 1000;
@@ -491,10 +491,11 @@ textarea {
     gap: 10px;
     margin-bottom: 25px;
     position: sticky;
-    top: max(80px, env(safe-area-inset-top));
+    top: 0;
     background: var(--bg-color);
     z-index: 100;
-    padding: 10px 0;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--accent-color);
 }
 
 .tab-btn {
