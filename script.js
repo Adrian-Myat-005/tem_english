@@ -6,16 +6,19 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXWYCkRbEtws
 const ui = {
     togglePopup: () => {
         const popup = document.getElementById('profile-popup');
+        if (!popup) return;
         const isVisible = popup.style.display === 'flex';
         popup.style.display = isVisible ? 'none' : 'flex';
         
         if (!isVisible) {
-            setTimeout(() => document.getElementById('edit-name').focus(), 100);
+            const input = document.getElementById('edit-name');
+            if (input) setTimeout(() => input.focus(), 100);
         }
     },
 
     toggleMenu: () => {
         const popup = document.getElementById('main-menu-popup');
+        if (!popup) return;
         const isVisible = popup.style.display === 'flex';
         popup.style.display = isVisible ? 'none' : 'flex';
     },
@@ -32,8 +35,8 @@ const ui = {
             if (e.key === 'Escape') {
                 const profilePopup = document.getElementById('profile-popup');
                 const menuPopup = document.getElementById('main-menu-popup');
-                if (profilePopup.style.display === 'flex') ui.togglePopup();
-                if (menuPopup.style.display === 'flex') ui.toggleMenu();
+                if (profilePopup && profilePopup.style.display === 'flex') ui.togglePopup();
+                if (menuPopup && menuPopup.style.display === 'flex') ui.toggleMenu();
             }
         });
     },
@@ -41,14 +44,15 @@ const ui = {
     initSlider: async () => {
         const track = document.getElementById('member-slider-track');
         const countBadge = document.getElementById('member-count');
-        if (!track) return;
+        const sliderSection = document.getElementById('member-slider-section');
+        if (!track || !countBadge || !sliderSection) return;
 
         try {
             const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_students`);
             const members = await response.json();
             
-            if (members.length === 0) {
-                document.getElementById('member-slider-section').style.display = 'none';
+            if (!members || members.length === 0) {
+                sliderSection.style.display = 'none';
                 return;
             }
 
@@ -60,7 +64,7 @@ const ui = {
                     <div class="member-photo-frame">
                         ${m.photo ? `<img src="${m.photo}" alt="${m.name}">` : `<span class="member-symbol">👤</span>`}
                     </div>
-                    <span class="member-name">${m.name.split(' ')[0]}</span>
+                    <span class="member-name">${(m.name || 'User').split(' ')[0]}</span>
                 </div>
             `).join('');
 
@@ -68,7 +72,7 @@ const ui = {
             track.style.animationDuration = `${duration}s`;
         } catch (e) {
             console.error('Slider load failed:', e);
-            document.getElementById('member-slider-section').style.display = 'none';
+            sliderSection.style.display = 'none';
         }
     }
 };
@@ -77,31 +81,34 @@ const days = {
     currentQuestion: null,
     currentIndex: 0,
     score: 0,
+    level: 0,
     allDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
 
     start: () => {
-        document.getElementById('days-section').style.display = 'flex';
+        const section = document.getElementById('days-section');
+        if (!section) return;
+        section.style.display = 'flex';
         document.getElementById('days-lesson-selection').style.display = 'grid';
         document.getElementById('days-practice-area').style.display = 'none';
         document.getElementById('days-result-screen').style.display = 'none';
         document.getElementById('days-title').textContent = 'DAYS';
-        const menu = document.getElementById('main-menu-popup');
-        if (menu.style.display === 'flex') ui.toggleMenu();
+        ui.toggleMenu();
     },
 
     close: () => {
-        document.getElementById('days-section').style.display = 'none';
+        const section = document.getElementById('days-section');
+        if (section) section.style.display = 'none';
     },
 
     initLesson: (level) => {
         days.currentIndex = 0;
         days.score = 0;
-        days.level = level; // 1: Tomorrow, 2: Yesterday, 0: Mixed
+        days.level = level; 
 
         const titles = ["MIXED ALL", "TOMORROW (+1)", "YESTERDAY (-1)"];
         document.getElementById('days-lesson-selection').style.display = 'none';
         document.getElementById('days-practice-area').style.display = 'block';
-        document.getElementById('days-title').textContent = titles[level];
+        document.getElementById('days-title').textContent = titles[level] || "DAYS";
 
         days.nextQuestion();
     },
@@ -123,8 +130,6 @@ const days = {
         }
 
         const correctAnswer = days.allDays[correctIndex];
-        
-        // Generate 4 options
         const options = [correctAnswer];
         while (options.length < 4) {
             const randomDay = days.allDays[Math.floor(Math.random() * 7)];
@@ -146,25 +151,35 @@ const days = {
 
     renderQuestion: () => {
         const optionsContainer = document.getElementById('days-options');
+        if (!optionsContainer) return;
+        
+        optionsContainer.classList.remove('locked');
         optionsContainer.innerHTML = days.currentQuestion.options.map(opt => `
             <button class="tactile-button" onclick="days.checkAnswer(this, '${opt}')">${opt}</button>
         `).join('');
 
         const progress = ((days.currentIndex + 1) / 10) * 100;
-        document.getElementById('days-progress-fill').style.width = `${progress}%`;
-        document.getElementById('days-progress-text').textContent = `${days.currentIndex + 1} / 10`;
+        const fill = document.getElementById('days-progress-fill');
+        const text = document.getElementById('days-progress-text');
+        if (fill) fill.style.width = `${progress}%`;
+        if (text) text.textContent = `${days.currentIndex + 1} / 10`;
     },
 
     speakQuestion: () => {
-        const msg = new SpeechSynthesisUtterance(days.currentQuestion.text);
-        msg.lang = 'en-US';
-        msg.rate = 0.75; // Slower for beginners
-        window.speechSynthesis.speak(msg);
+        if (!days.currentQuestion) return;
+        try {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(days.currentQuestion.text);
+            msg.lang = 'en-US';
+            msg.rate = 0.75; 
+            window.speechSynthesis.speak(msg);
+        } catch(e) { console.error("Speech error:", e); }
     },
 
     checkAnswer: (btn, choice) => {
-        if (btn.parentElement.classList.contains('locked')) return;
-        btn.parentElement.classList.add('locked');
+        const container = document.getElementById('days-options');
+        if (!container || container.classList.contains('locked')) return;
+        container.classList.add('locked');
 
         const isCorrect = choice === days.currentQuestion.answer;
         if (isCorrect) {
@@ -172,8 +187,7 @@ const days = {
             btn.classList.add('option-correct');
         } else {
             btn.classList.add('option-incorrect');
-            // Show correct one
-            Array.from(btn.parentElement.children).forEach(child => {
+            Array.from(container.children).forEach(child => {
                 if (child.textContent === days.currentQuestion.answer) {
                     child.classList.add('option-correct');
                 }
@@ -209,17 +223,19 @@ const numbers = {
     isFlipped: false,
 
     start: () => {
-        document.getElementById('numbers-section').style.display = 'flex';
+        const section = document.getElementById('numbers-section');
+        if (!section) return;
+        section.style.display = 'flex';
         document.getElementById('lesson-selection').style.display = 'grid';
         document.getElementById('flashcard-area').style.display = 'none';
         document.getElementById('result-screen').style.display = 'none';
         document.getElementById('lesson-title').textContent = 'NUMBERS';
-        const menu = document.getElementById('main-menu-popup');
-        if (menu.style.display === 'flex') ui.toggleMenu();
+        ui.toggleMenu();
     },
 
     close: () => {
-        document.getElementById('numbers-section').style.display = 'none';
+        const section = document.getElementById('numbers-section');
+        if (section) section.style.display = 'none';
     },
 
     initLesson: (level) => {
@@ -246,7 +262,7 @@ const numbers = {
 
         document.getElementById('lesson-selection').style.display = 'none';
         document.getElementById('flashcard-area').style.display = 'block';
-        document.getElementById('lesson-title').textContent = titles[level];
+        document.getElementById('lesson-title').textContent = titles[level] || "NUMBERS";
         
         numbers.showCard();
     },
@@ -254,6 +270,7 @@ const numbers = {
     showCard: () => {
         const num = numbers.currentLesson[numbers.currentIndex];
         const flashcard = document.getElementById('flashcard');
+        if (!flashcard) return;
         
         numbers.isFlipped = false;
         flashcard.classList.remove('flipped');
@@ -262,14 +279,17 @@ const numbers = {
         document.getElementById('card-text').textContent = numbers.toWords(num);
         
         const progress = ((numbers.currentIndex + 1) / 20) * 100;
-        document.getElementById('progress-fill').style.width = `${progress}%`;
-        document.getElementById('progress-text').textContent = `${numbers.currentIndex + 1} / 20`;
+        const fill = document.getElementById('progress-fill');
+        const text = document.getElementById('progress-text');
+        if (fill) fill.style.width = `${progress}%`;
+        if (text) text.textContent = `${numbers.currentIndex + 1} / 20`;
     },
 
     flip: () => {
         if (numbers.isFlipped) return;
         numbers.isFlipped = true;
-        document.getElementById('flashcard').classList.add('flipped');
+        const card = document.getElementById('flashcard');
+        if (card) card.classList.add('flipped');
         document.getElementById('card-controls').style.visibility = 'visible';
         setTimeout(() => numbers.speak(), 300);
     },
@@ -302,6 +322,7 @@ const numbers = {
         const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
         
         const convert = (num) => {
+            if (num === 0) return "zero";
             if (num < 10) return ones[num];
             if (num < 20) return teens[num - 10];
             if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? "-" + ones[num % 10] : "");
@@ -313,11 +334,15 @@ const numbers = {
     },
 
     speak: () => {
-        const text = document.getElementById('card-text').textContent;
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US';
-        msg.rate = 0.85; 
-        window.speechSynthesis.speak(msg);
+        const textElem = document.getElementById('card-text');
+        if (!textElem) return;
+        try {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(textElem.textContent);
+            msg.lang = 'en-US';
+            msg.rate = 0.85; 
+            window.speechSynthesis.speak(msg);
+        } catch(e) { console.error("Speech error:", e); }
     }
 };
 
@@ -334,55 +359,78 @@ const auth = {
         const photo = user.photo_url || '';
         const query = `id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}&photo_url=${encodeURIComponent(photo)}`;
         fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' })
-            .catch(e => console.error('Silent failure:', e));
+            .catch(e => console.error('Registration error:', e));
     },
 
     updateName: () => {
-        const user = JSON.parse(localStorage.getItem('logged_user'));
-        const newName = document.getElementById('edit-name').value.trim();
+        const userStr = localStorage.getItem('logged_user');
+        if (!userStr) return;
+        const user = JSON.parse(userStr);
+        const input = document.getElementById('edit-name');
+        if (!input) return;
+        const newName = input.value.trim();
         if (!newName) return;
         
         const btn = document.querySelector('.edit-name-group .tactile-button');
-        const originalText = btn.textContent;
-        btn.textContent = 'Updating...';
-        btn.disabled = true;
+        const originalText = btn ? btn.textContent : 'Update';
+        if (btn) {
+            btn.textContent = 'Updating...';
+            btn.disabled = true;
+        }
 
         const query = `type=update_name&id=${user.id}&new_name=${encodeURIComponent(newName)}`;
         fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' })
             .then(() => {
                 user.first_name = newName;
                 localStorage.setItem('logged_user', JSON.stringify(user));
-                btn.textContent = 'Confirmed';
+                if (btn) btn.textContent = 'Confirmed';
                 setTimeout(() => {
                     ui.togglePopup();
-                    btn.textContent = originalText;
-                    btn.disabled = false;
+                    if (btn) {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
                 }, 600);
             })
             .catch(e => {
                 console.error('Update failure:', e);
-                btn.textContent = originalText;
-                btn.disabled = false;
+                if (btn) {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
             });
     },
 
     showMemberArea: (user) => {
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('member-slider-section').style.display = 'none';
-        document.getElementById('member-area').style.display = 'block';
+        const authSec = document.getElementById('auth-section');
+        const sliderSec = document.getElementById('member-slider-section');
+        const memberArea = document.getElementById('member-area');
+        if (authSec) authSec.style.display = 'none';
+        if (sliderSec) sliderSec.style.display = 'none';
+        if (memberArea) memberArea.style.display = 'block';
         
-        document.getElementById('main-menu-trigger').style.display = 'flex';
-        const trigger = document.getElementById('user-profile-trigger');
-        trigger.style.display = 'flex';
-        trigger.onclick = ui.togglePopup;
-
-        if (user.photo_url) {
-            document.getElementById('user-photo').src = user.photo_url;
-        } else {
-            document.getElementById('user-photo').style.display = 'none';
-            trigger.innerHTML = '<span style="font-size: 1.2rem;">👤</span>';
+        const menuTrigger = document.getElementById('main-menu-trigger');
+        if (menuTrigger) {
+            menuTrigger.style.display = 'flex';
+            menuTrigger.onclick = ui.toggleMenu;
         }
-        document.getElementById('edit-name').value = user.first_name;
+
+        const profileTrigger = document.getElementById('user-profile-trigger');
+        if (profileTrigger) {
+            profileTrigger.style.display = 'flex';
+            profileTrigger.onclick = ui.togglePopup;
+
+            const photo = document.getElementById('user-photo');
+            if (user.photo_url && photo) {
+                photo.src = user.photo_url;
+                photo.style.display = 'block';
+            } else if (photo) {
+                photo.style.display = 'none';
+                profileTrigger.innerHTML = '<span style="font-size: 1.2rem;">👤</span>';
+            }
+        }
+        const nameInput = document.getElementById('edit-name');
+        if (nameInput) nameInput.value = user.first_name;
     },
 
     logout: () => {
@@ -408,7 +456,13 @@ const auth = {
         ui.initListeners();
         const loggedUser = localStorage.getItem('logged_user');
         if (loggedUser) {
-            auth.showMemberArea(JSON.parse(loggedUser));
+            try {
+                auth.showMemberArea(JSON.parse(loggedUser));
+            } catch(e) {
+                localStorage.removeItem('logged_user');
+                auth.loadWidget();
+                ui.initSlider();
+            }
         } else {
             auth.loadWidget();
             ui.initSlider();
