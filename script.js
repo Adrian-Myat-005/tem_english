@@ -166,7 +166,8 @@
             
             try {
                 // Use standard redirect following for Google Script Web App
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_blog_posts`, {
+                const timestamp = new Date().getTime();
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_blog_posts&t=${timestamp}`, {
                     method: 'GET',
                     redirect: 'follow'
                 });
@@ -440,7 +441,7 @@
         },
 
         registerStudent: (user) => {
-            const query = `id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}&photo_url=${encodeURIComponent(user.photo_url || '')}`;
+            const query = `type=login&id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}&photo_url=${encodeURIComponent(user.photo_url || '')}`;
             fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' }).catch(() => {});
         },
 
