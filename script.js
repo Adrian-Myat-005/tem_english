@@ -4,30 +4,26 @@ const BOT_USERNAME = "Tem_english_bot";
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybpHhLYvsIvlZiEhdk5fTeHEP9yQwc_iC6ax_T2a68wj5S1H4qjAgSw8edg2vXm0o_cg/exec";
 
 const auth = {
-    // 1. Handle the Telegram Auth Response
     onTelegramAuth: (user) => {
         if (user) {
             localStorage.setItem('logged_user', JSON.stringify(user));
-            auth.registerStudent(user); // Save to Google Brain
+            auth.registerStudent(user); 
             auth.showMemberArea(user);
         }
     },
 
-    // 2. Send student data to your Google Apps Script "Brain"
     registerStudent: (user) => {
-        const params = new URLSearchParams(user).toString();
-        fetch(`${GOOGLE_SCRIPT_URL}?${params}`, { mode: 'no-cors' })
-            .then(() => console.log('Student registered in Brain'))
-            .catch(error => console.error('Error registering student:', error));
+        // Ensure all data are strings for the URL
+        const query = `id=${user.id}&first_name=${encodeURIComponent(user.first_name)}&username=${encodeURIComponent(user.username || '')}`;
+        fetch(`${GOOGLE_SCRIPT_URL}?${query}`, { mode: 'no-cors' })
+            .then(() => console.log('Auth data sent to Brain'))
+            .catch(e => console.error('Error:', e));
     },
 
-    // 3. Update the UI for the Student
     showMemberArea: (user) => {
         document.getElementById('auth-section').style.display = 'none';
         document.getElementById('member-area').style.display = 'block';
-        
         document.getElementById('welcome-msg').textContent = `WELCOME, ${user.first_name.toUpperCase()}`;
-        
         if (user.photo_url) {
             const photoImg = document.getElementById('user-photo');
             photoImg.src = user.photo_url;
