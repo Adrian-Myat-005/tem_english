@@ -46,23 +46,49 @@ function doPost(e) {
   }
 }
 
-// --- HANDLES LOGIN FROM WEBSITE ---
+// --- HANDLES LOGIN & UPDATES FROM WEBSITE ---
 function doGet(e) {
-  const user = e.parameter;
-  if (!user.id) return ContentService.createTextOutput("No ID").setMimeType(ContentService.MimeType.TEXT);
+  const params = e.parameter;
+  const type = params.type || 'login';
+
+  if (!params.id) return ContentService.createTextOutput("No ID").setMimeType(ContentService.MimeType.TEXT);
 
   let students = JSON.parse(store.getProperty('students') || "[]");
+
+  if (type === 'login') {
+    // Robust check for existing students
+    const studentExists = students.some(s => String(s.id) === String(params.id));
+    
+    if (!studentExists) {
+      students.push({ id: String(params.id), name: params.first_name, username: params.username || 'N/A' });
+      store.setProperty('students', JSON.stringify(students));
+      sendMessage(ADMIN_ID, `🔔 *New Student Joined!*\n👤 Name: ${params.first_name}\n🆔 User: @${params.username || 'N/A'}`);
+    }
+    return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
+  } 
   
-  // Robust check for existing students
-  const studentExists = students.some(s => String(s.id) === String(user.id));
-  
-  if (!studentExists) {
-    students.push({ id: String(user.id), name: user.first_name, username: user.username || 'N/A' });
-    store.setProperty('students', JSON.stringify(students));
-    sendMessage(ADMIN_ID, `🔔 *New Student Joined!*\n👤 Name: ${user.first_name}\n🆔 User: @${user.username || 'N/A'}`);
+  if (type === 'update_name') {
+    const newName = params.new_name;
+    if (!newName) return ContentService.createTextOutput("No Name").setMimeType(ContentService.MimeType.TEXT);
+
+    let updated = false;
+    students = students.map(s => {
+      if (String(s.id) === String(params.id)) {
+        s.name = newName;
+        updated = true;
+      }
+      return s;
+    });
+
+    if (updated) {
+      store.setProperty('students', JSON.stringify(students));
+      return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
+    } else {
+      return ContentService.createTextOutput("Not Found").setMimeType(ContentService.MimeType.TEXT);
+    }
   }
-  
-  return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
+
+  return ContentService.createTextOutput("Unknown Type").setMimeType(ContentService.MimeType.TEXT);
 }
 
 function sendMessage(chatId, text) {

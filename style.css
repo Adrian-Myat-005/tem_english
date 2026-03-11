@@ -30,6 +30,97 @@ body {
 .container {
     max-width: 600px;
     width: 90%;
+    position: relative; /* For profile-trigger positioning if needed, or use body */
+}
+
+/* Profile Trigger (Top Right) */
+.profile-trigger {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#user-photo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--button-border);
+    background-color: var(--button-bg);
+}
+
+/* Popup Modal */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.popup-content {
+    background-color: var(--bg-color);
+    padding: 2.5rem;
+    width: 90%;
+    max-width: 320px;
+    position: relative;
+    border: 1px solid var(--button-border);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #999;
+}
+
+.popup-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.edit-name-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: left;
+}
+
+.edit-name-group label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: #666;
+}
+
+.small-button {
+    width: 100% !important;
+    padding: 0.8rem !important;
+    font-size: 0.8rem !important;
+}
+
+.logout-group {
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.logout-group .tactile-button {
+    width: 100%;
 }
 
 header h1 {

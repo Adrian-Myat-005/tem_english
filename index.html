@@ -8,6 +8,28 @@
 </head>
 <body>
     <div class="container">
+        <!-- Top Right Profile -->
+        <div id="user-profile-trigger" class="profile-trigger" style="display: none;">
+            <img id="user-photo" src="" alt="Profile">
+        </div>
+
+        <!-- Profile Popup -->
+        <div id="profile-popup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <button class="close-popup" onclick="ui.togglePopup()">✕</button>
+                <div class="popup-body">
+                    <div class="edit-name-group">
+                        <label for="edit-name">FULL NAME</label>
+                        <input type="text" id="edit-name" placeholder="Enter name">
+                        <button class="tactile-button small-button" onclick="auth.updateName()">UPDATE</button>
+                    </div>
+                    <div class="logout-group">
+                        <button class="tactile-button" onclick="auth.logout()">LOGOUT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <header>
             <h1>TEM ENGLISH</h1>
         </header>
@@ -22,15 +44,7 @@
             </section>
 
             <section id="member-area" style="display: none;">
-                <div class="profile-header">
-                    <img id="user-photo" src="" alt="" style="display: none; width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 2px solid var(--button-border);">
-                    <h2 id="welcome-msg">WELCOME</h2>
-                </div>
-                <nav class="actions">
-                    <button class="tactile-button">MY LESSONS</button>
-                    <button class="tactile-button">PROGRESS</button>
-                    <button class="tactile-button" onclick="auth.logout()">LOGOUT</button>
-                </nav>
+                <!-- Main page content left blank as requested -->
             </section>
         </main>
         <footer>
