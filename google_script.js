@@ -84,11 +84,10 @@ function doGet(e) {
   const params = e.parameter;
   const type = params.type || 'login';
 
-  if (!params.id) return ContentService.createTextOutput("No ID").setMimeType(ContentService.MimeType.TEXT);
-
   let students = JSON.parse(store.getProperty('students') || "[]");
 
   if (type === 'login') {
+    if (!params.id) return ContentService.createTextOutput("No ID").setMimeType(ContentService.MimeType.TEXT);
     // Robust check for existing students
     const studentExists = students.some(s => String(s.id) === String(params.id));
     
@@ -119,6 +118,7 @@ function doGet(e) {
   }
 
   if (type === 'update_name') {
+    if (!params.id) return ContentService.createTextOutput("No ID").setMimeType(ContentService.MimeType.TEXT);
     const newName = params.new_name;
     if (!newName) return ContentService.createTextOutput("No Name").setMimeType(ContentService.MimeType.TEXT);
 
