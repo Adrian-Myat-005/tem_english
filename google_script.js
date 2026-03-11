@@ -69,13 +69,26 @@ function doGet(e) {
     const studentExists = students.some(s => String(s.id) === String(params.id));
     
     if (!studentExists) {
-      students.push({ id: String(params.id), name: params.first_name, username: params.username || 'N/A' });
+      students.push({ 
+        id: String(params.id), 
+        name: params.first_name, 
+        username: params.username || 'N/A',
+        photo_url: params.photo_url || ''
+      });
       store.setProperty('students', JSON.stringify(students));
       sendMessage(ADMIN_ID, `🔔 *New Student Joined!*\n👤 Name: ${params.first_name}\n🆔 User: @${params.username || 'N/A'}`);
     }
     return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
   } 
   
+  if (type === 'get_students') {
+    const publicData = students.map(s => ({ 
+      name: s.name, 
+      photo: s.photo_url || '' 
+    }));
+    return ContentService.createTextOutput(JSON.stringify(publicData)).setMimeType(ContentService.MimeType.JSON);
+  }
+
   if (type === 'update_name') {
     const newName = params.new_name;
     if (!newName) return ContentService.createTextOutput("No Name").setMimeType(ContentService.MimeType.TEXT);
