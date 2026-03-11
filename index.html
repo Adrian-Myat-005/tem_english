@@ -8,23 +8,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Right Controls -->
+    <!-- Top Right Profile -->
     <div class="top-controls">
-        <div id="main-menu-trigger" class="menu-trigger" style="display: none;">
-            <span>⋮</span>
-        </div>
         <div id="user-profile-trigger" class="profile-trigger" style="display: none;">
             <img id="user-photo" src="" alt="👤">
-        </div>
-    </div>
-
-    <!-- Main Menu Popup -->
-    <div id="main-menu-popup" class="popup-overlay">
-        <div class="popup-content">
-            <button class="close-popup" onclick="ui.toggleMenu()">✕</button>
-            <div id="menu-container" class="popup-body">
-                <!-- Dynamic menu content -->
-            </div>
         </div>
     </div>
 
@@ -210,20 +197,50 @@
                 </div>
             </section>
 
-            <!-- Member Area -->
-            <section id="member-area" style="display: none;">
-                <div class="member-content">
-                    <div class="card">
-                        <span class="member-name">OFFICIAL UPDATES</span>
-                        <p class="hero-text">Latest curriculum and administrative announcements.</p>
-                    </div>
+    <!-- Member Area -->
+    <section id="member-area" style="display: none;">
+        <!-- Top Tab Navigation -->
+        <nav class="tab-navigation">
+            <button id="tab-blogs" class="tab-btn active" onclick="ui.switchView('blogs')">BLOGS</button>
+            <button id="tab-friends" class="tab-btn" onclick="ui.switchView('friends')">FRIENDS</button>
+            <button id="tab-tools" class="tab-btn" onclick="ui.switchView('tools')">TOOLS</button>
+        </nav>
 
-                    <!-- Blog Feed Container -->
-                    <div id="blog-feed" class="feed-container">
-                        <!-- Dynamic Posts Injected Here -->
-                    </div>
+        <div class="member-content">
+            <!-- Blogs View -->
+            <div id="view-blogs" class="tab-view">
+                <div class="card">
+                    <span class="member-name">OFFICIAL UPDATES</span>
+                    <p class="hero-text">Latest curriculum and administrative announcements.</p>
                 </div>
-            </section>
+                <div id="blog-feed" class="feed-container">
+                    <!-- Dynamic Posts Injected Here -->
+                </div>
+            </div>
+
+            <!-- Friends View -->
+            <div id="view-friends" class="tab-view" style="display: none;">
+                <div class="card">
+                    <span class="member-name">LEARNING CIRCLE</span>
+                    <p class="hero-text">Active students in your community.</p>
+                </div>
+                <div id="friends-list" class="friends-grid">
+                    <!-- Dynamic Friends Injected Here -->
+                </div>
+            </div>
+
+            <!-- Tools View -->
+            <div id="view-tools" class="tab-view" style="display: none;">
+                <div class="card">
+                    <span class="member-name">LEARNING TOOLS</span>
+                    <p class="hero-text">Interactive modules to sharpen your English.</p>
+                </div>
+                <div id="tools-container" class="tools-list">
+                    <!-- Tools Injected Here -->
+                </div>
+            </div>
+        </div>
+    </section>
         </main>
 
         <footer>

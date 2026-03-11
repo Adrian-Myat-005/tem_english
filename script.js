@@ -21,66 +21,69 @@
             }
         },
 
-        toggleMenu: () => {
-            const popup = ui.get('main-menu-popup');
-            if (!popup) return;
-            const isVisible = popup.style.display === 'flex';
-            popup.style.display = isVisible ? 'none' : 'flex';
-            if (!isVisible) ui.renderMenu('main');
+        switchView: (viewName) => {
+            // Toggle Views
+            document.querySelectorAll('.tab-view').forEach(view => view.style.display = 'none');
+            const targetView = ui.get(`view-${viewName}`);
+            if (targetView) targetView.style.display = 'block';
+
+            // Toggle Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const targetTab = ui.get(`tab-${viewName}`);
+            if (targetTab) targetTab.classList.add('active');
+
+            // View Specific Logic
+            if (viewName === 'blogs') blog.init();
+            if (viewName === 'friends') ui.renderFriends();
+            if (viewName === 'tools') ui.renderTools();
         },
 
-        renderMenu: (view) => {
-            const container = ui.get('menu-container');
+        renderFriends: async () => {
+            const container = ui.get('friends-list');
             if (!container) return;
-            let html = '';
+            container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">FINDING FRIENDS...</p></div>';
 
-            switch(view) {
-                case 'main':
-                    html = `
-                        <div class="menu-list">
-                            <button class="tactile-button" onclick="ui.renderMenu('tools')">Tools</button>
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_students`);
+                const friends = await response.json();
+                
+                if (!friends || friends.length === 0) {
+                    container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">ALONE FOR NOW</p></div>';
+                    return;
+                }
+
+                container.innerHTML = friends.map(f => `
+                    <div class="friend-row">
+                        <img class="friend-photo" src="${f.photo || 'https://placehold.co/100x100?text=👤'}" alt="${f.name}" onerror="this.src='https://placehold.co/100x100?text=👤'">
+                        <div class="friend-info">
+                            <span class="friend-name">${f.name}</span>
+                            <span class="friend-status">ACTIVE</span>
                         </div>
-                    `;
-                    break;
-                case 'tools':
-                    html = `
-                        <div class="menu-header">
-                            <button class="back-button" onclick="ui.renderMenu('main')">←</button>
-                            <span class="member-name">Tools</span>
-                        </div>
-                        <div class="menu-list">
-                            <button class="tactile-button" onclick="ui.renderMenu('beginner_tools')">Beginner Tools</button>
-                        </div>
-                    `;
-                    break;
-                case 'beginner_tools':
-                    html = `
-                        <div class="menu-header">
-                            <button class="back-button" onclick="ui.renderMenu('tools')">←</button>
-                            <span class="member-name">Beginner Tools</span>
-                        </div>
-                        <div class="menu-list">
-                            <button class="tactile-button" onclick="numbers.start()">Numbers</button>
-                            <button class="tactile-button" onclick="days.start()">Days</button>
-                        </div>
-                    `;
-                    break;
+                    </div>
+                `).join('');
+            } catch (e) {
+                container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">UNABLE TO CONNECT</p></div>';
             }
-            container.innerHTML = html;
         },
-        
+
+        renderTools: () => {
+            const container = ui.get('tools-container');
+            if (!container) return;
+            container.innerHTML = `
+                <button class="tactile-button" onclick="numbers.start()">Numbers Practice</button>
+                <button class="tactile-button" onclick="days.start()">Days Practice</button>
+            `;
+        },
+
         initListeners: () => {
             window.addEventListener('click', (e) => {
                 const profilePopup = ui.get('profile-popup');
-                const menuPopup = ui.get('main-menu-popup');
                 if (e.target === profilePopup) ui.togglePopup();
-                if (e.target === menuPopup) ui.toggleMenu();
             });
 
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (ui.get('profile-popup')?.style.display === 'flex') ui.togglePopup();
-                    if (ui.get('main-menu-popup')?.style.display === 'flex') ui.toggleMenu();
                     if (ui.get('days-section')?.style.display === 'flex') days.close();
                     if (ui.get('numbers-section')?.style.display === 'flex') numbers.close();
                 }
@@ -491,7 +494,7 @@
                 else if (photo) { photo.style.display = 'none'; pt.innerHTML = '<span style="font-size: 1.2rem;">👤</span>'; }
             }
             if (ui.get('edit-name')) ui.get('edit-name').value = user.first_name;
-            blog.init();
+            ui.switchView('blogs');
         },
 
         logout: () => { localStorage.removeItem('logged_user'); window.location.reload(); },
