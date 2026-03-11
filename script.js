@@ -5,7 +5,7 @@
     "use strict";
 
     const BOT_USERNAME = "Tem_english_bot"; 
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9ux6HVCM-dOap0Uv7dhZ9a9JtazmluS8_ZpNtNxPRDaC1zmAnXBd04Bqw90U2Ge0juA/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwreCxhjscVkc24maOmCWBGQkeNNhNmZpng3ntxs34ssV-WjDRlPp9V3-tSTwTY454lMw/exec";
 
     const ui = {
         get: (id) => document.getElementById(id),
