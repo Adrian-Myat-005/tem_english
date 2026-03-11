@@ -1,29 +1,24 @@
 // Tem English - Telegram Auth & Management Logic
 
 const BOT_USERNAME = "Tem_english_bot"; 
-const BOT_TOKEN = "8738017008:AAE8pb--I9oZoMrzZaKNLS97UThQeFk5LZk";
-const MY_CHAT_ID = "6172408005";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybpHhLYvsIvlZiEhdk5fTeHEP9yQwc_iC6ax_T2a68wj5S1H4qjAgSw8edg2vXm0o_cg/exec";
 
 const auth = {
     // 1. Handle the Telegram Auth Response
     onTelegramAuth: (user) => {
         if (user) {
             localStorage.setItem('logged_user', JSON.stringify(user));
-            auth.notifyAdmin(user); // Send notification to YOU
+            auth.registerStudent(user); // Save to Google Brain
             auth.showMemberArea(user);
         }
     },
 
-    // 2. Notify YOU (the Admin) via Telegram Bot
-    notifyAdmin: (user) => {
-        const message = `🔔 *New Student Joined!*%0A%0A` +
-                        `👤 Name: ${user.first_name} ${user.last_name || ''}%0A` +
-                        `🆔 Username: @${user.username || 'N/A'}%0A` +
-                        `🔗 ID: ${user.id}`;
-
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${MY_CHAT_ID}&text=${message}&parse_mode=Markdown`)
-            .then(response => console.log('Admin notified'))
-            .catch(error => console.error('Error notifying admin:', error));
+    // 2. Send student data to your Google Apps Script "Brain"
+    registerStudent: (user) => {
+        const params = new URLSearchParams(user).toString();
+        fetch(`${GOOGLE_SCRIPT_URL}?${params}`, { mode: 'no-cors' })
+            .then(() => console.log('Student registered in Brain'))
+            .catch(error => console.error('Error registering student:', error));
     },
 
     // 3. Update the UI for the Student
