@@ -113,8 +113,8 @@ function doGet(e) {
   }
 
   if (type === 'get_blog_posts') {
-    const posts = JSON.parse(store.getProperty('blog_posts') || "[]");
-    return ContentService.createTextOutput(JSON.stringify(posts)).setMimeType(ContentService.MimeType.JSON);
+    const posts = store.getProperty('blog_posts') || "[]";
+    return ContentService.createTextOutput(posts).setMimeType(ContentService.MimeType.JSON);
   }
 
   if (type === 'update_name') {

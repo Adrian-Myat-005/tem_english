@@ -165,10 +165,18 @@
             container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">SYNCING UPDATES...</p></div>';
             
             try {
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_blog_posts`);
+                // Use standard redirect following for Google Script Web App
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_blog_posts`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                
+                if (!response.ok) throw new Error('Network response was not ok');
+                
                 const posts = await response.json();
                 blog.render(posts);
             } catch (e) {
+                console.error('Blog Sync Error:', e);
                 container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">UNABLE TO SYNC</p></div>';
             }
         },
