@@ -1,0 +1,71 @@
+const TOKEN = "8738017008:AAE8pb--I9oZoMrzZaKNLS97UThQeFk5LZk";
+const ADMIN_ID = "6172408005";
+const store = PropertiesService.getScriptProperties();
+
+// --- HANDLES COMMANDS FROM TELEGRAM ---
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  if (!data.message) return;
+  const text = data.message.text;
+  const chatId = data.message.chat.id.toString();
+
+  if (chatId !== ADMIN_ID) return;
+
+  if (text === "/start") {
+    sendMessage(chatId, "🚀 *Tem English Admin Active*\n\n/students - List all\n/remove [id] - Remove student\n/broadcast [msg] - Send to all\n/clear - Reset list");
+  } 
+  else if (text === "/students") {
+    const students = JSON.parse(store.getProperty('students') || "[]");
+    if (students.length === 0) return sendMessage(chatId, "📭 No students yet.");
+    let list = "👥 *REGISTERED STUDENTS:*\n\n";
+    students.forEach((s, i) => list += `${i+1}. ${s.name} (@${s.username || 'N/A'})\nID: \`${s.id}\`\n\n`);
+    sendMessage(chatId, list);
+  }
+  else if (text.startsWith("/remove ")) {
+    const idToRemove = text.replace("/remove ", "").trim();
+    let students = JSON.parse(store.getProperty('students') || "[]");
+    const initialCount = students.length;
+    students = students.filter(s => String(s.id) !== idToRemove);
+    
+    if (students.length < initialCount) {
+      store.setProperty('students', JSON.stringify(students));
+      sendMessage(chatId, `✅ Removed student with ID: \`${idToRemove}\``);
+    } else {
+      sendMessage(chatId, `❌ No student found with ID: \`${idToRemove}\``);
+    }
+  }
+  else if (text.startsWith("/broadcast ")) {
+    const msg = text.replace("/broadcast ", "");
+    const students = JSON.parse(store.getProperty('students') || "[]");
+    students.forEach(s => sendMessage(s.id, `📢 *Message from Tem English:*\n\n${msg}`));
+    sendMessage(chatId, `✅ Sent to ${students.length} students.`);
+  }
+  else if (text === "/clear") {
+    store.setProperty('students', "[]");
+    sendMessage(chatId, "🗑 List cleared.");
+  }
+}
+
+// --- HANDLES LOGIN FROM WEBSITE ---
+function doGet(e) {
+  const user = e.parameter;
+  if (!user.id) return ContentService.createTextOutput("No ID").setMimeType(ContentService.MimeType.TEXT);
+
+  let students = JSON.parse(store.getProperty('students') || "[]");
+  
+  // Robust check for existing students
+  const studentExists = students.some(s => String(s.id) === String(user.id));
+  
+  if (!studentExists) {
+    students.push({ id: String(user.id), name: user.first_name, username: user.username || 'N/A' });
+    store.setProperty('students', JSON.stringify(students));
+    sendMessage(ADMIN_ID, `🔔 *New Student Joined!*\n👤 Name: ${user.first_name}\n🆔 User: @${user.username || 'N/A'}`);
+  }
+  
+  return ContentService.createTextOutput("OK").setMimeType(ContentService.MimeType.TEXT);
+}
+
+function sendMessage(chatId, text) {
+  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
+  UrlFetchApp.fetch(url);
+}

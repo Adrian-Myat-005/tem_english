@@ -19,10 +19,11 @@ A minimalist English learning site with a cream-colored, tactile UI.
 2. **Data Storage**: Google Script uses `PropertiesService` to store a JSON list of students.
 3. **Admin Notifications**: Every new registration triggers a `sendMessage` from the Bot to the Admin.
 4. **Admin Commands**:
-   - `/start`: Menu
-   - `/students`: List all registered students
-   - `/broadcast [msg]`: Message all students
-   - `/clear`: Reset the list
+    - `/start`: Menu
+    - `/students`: List all registered students
+    - `/remove [id]`: Remove a student by their ID
+    - `/broadcast [msg]`: Message all students
+    - `/clear`: Reset the list
 
 ## Design Standards
 - **Aesthetic**: Cream background (#fdfaf0), minimalist, monochrome system symbols only.
