@@ -11,6 +11,30 @@ function doPost(e) {
 
   if (chatId !== ADMIN_ID) return;
 
+  // Handle Photos (Blog Posts)
+  if (data.message.photo) {
+    const photo = data.message.photo[data.message.photo.length - 1]; // Get highest resolution
+    const fileId = photo.file_id;
+    const caption = data.message.caption || "";
+    
+    // Get file path from Telegram
+    const fileResponse = UrlFetchApp.fetch(`https://api.telegram.org/bot${TOKEN}/getFile?file_id=${fileId}`);
+    const filePath = JSON.parse(fileResponse.getContentText()).result.file_path;
+    const imageUrl = `https://api.telegram.org/file/bot${TOKEN}/${filePath}`;
+
+    let posts = JSON.parse(store.getProperty('blog_posts') || "[]");
+    posts.unshift({
+      id: Date.now(),
+      image: imageUrl,
+      caption: caption,
+      date: new Date().toLocaleDateString()
+    });
+    
+    // Keep only last 20 posts to save space
+    store.setProperty('blog_posts', JSON.stringify(posts.slice(0, 20)));
+    return sendMessage(chatId, "✅ *Blog Post Published!*\nVisible to all students on the website.");
+  }
+
   if (text === "/start") {
     sendMessage(chatId, "🚀 *Tem English Admin Active*\n\n/students - List all\n/remove [id] - Remove student\n/broadcast [msg] - Send to all\n/clear - Reset list");
   } 
@@ -87,6 +111,11 @@ function doGet(e) {
       photo: s.photo_url || '' 
     }));
     return ContentService.createTextOutput(JSON.stringify(publicData)).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (type === 'get_blog_posts') {
+    const posts = JSON.parse(store.getProperty('blog_posts') || "[]");
+    return ContentService.createTextOutput(JSON.stringify(posts)).setMimeType(ContentService.MimeType.JSON);
   }
 
   if (type === 'update_name') {

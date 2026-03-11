@@ -89,18 +89,26 @@
 
         initSlider: async () => {
             const track = ui.get('member-slider-track');
-            const countBadge = ui.get('member-count');
+            const slideMemberCount = ui.get('slide-member-count');
             const sliderSection = ui.get('member-slider-section');
-            if (!track || !countBadge || !sliderSection) return;
+            const strengthSection = ui.get('strength-slides');
+            
+            if (!track || !sliderSection) return;
 
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_students`);
                 const members = await response.json();
+                
                 if (!members || members.length === 0) {
-                    sliderSection.style.display = 'none';
+                    if (sliderSection) sliderSection.style.display = 'none';
+                    if (strengthSection) strengthSection.style.display = 'none';
                     return;
                 }
-                countBadge.textContent = `${members.length} MEMBERS JOINED`;
+
+                if (slideMemberCount) {
+                    slideMemberCount.textContent = `${members.length} MEMBERS`;
+                }
+
                 const displayMembers = [...members, ...members, ...members];
                 track.innerHTML = displayMembers.map(m => `
                     <div class="member-profile">
@@ -113,9 +121,84 @@
                 `).join('');
                 const duration = Math.max(15, members.length * 4);
                 track.style.animationDuration = `${duration}s`;
+                
+                ui.initStrengthSlides();
             } catch (e) {
-                sliderSection.style.display = 'none';
+                if (sliderSection) sliderSection.style.display = 'none';
+                if (strengthSection) strengthSection.style.display = 'none';
             }
+        },
+
+        initStrengthSlides: () => {
+            const wrapper = ui.get('slides-wrapper');
+            const indicators = document.querySelectorAll('.indicator');
+            if (!wrapper || !indicators.length) return;
+
+            const updateIndicators = () => {
+                const index = Math.round(wrapper.scrollLeft / wrapper.offsetWidth);
+                indicators.forEach((ind, i) => {
+                    ind.classList.toggle('active', i === index);
+                });
+            };
+
+            wrapper.addEventListener('scroll', updateIndicators);
+
+            // Auto-slide every 6 seconds
+            let slideInterval = setInterval(() => {
+                const index = Math.round(wrapper.scrollLeft / wrapper.offsetWidth);
+                const nextIndex = (index + 1) % indicators.length;
+                wrapper.scrollTo({
+                    left: nextIndex * wrapper.offsetWidth,
+                    behavior: 'smooth'
+                });
+            }, 6000);
+
+            // Pause auto-slide on user interaction
+            wrapper.addEventListener('touchstart', () => clearInterval(slideInterval), { passive: true });
+        }
+    };
+
+    const blog = {
+        init: async () => {
+            const container = ui.get('blog-feed');
+            if (!container) return;
+            container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">SYNCING UPDATES...</p></div>';
+            
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_blog_posts`);
+                const posts = await response.json();
+                blog.render(posts);
+            } catch (e) {
+                container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">UNABLE TO SYNC</p></div>';
+            }
+        },
+
+        render: (posts) => {
+            const container = ui.get('blog-feed');
+            if (!container || !posts) return;
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">NO RECENT UPDATES</p></div>';
+                return;
+            }
+            container.innerHTML = posts.map(post => `
+                <div class="feed-post card">
+                    <div class="post-header">
+                        <div class="post-user-photo" style="background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <span style="font-size: 0.8rem; font-weight:700;">TE</span>
+                        </div>
+                        <div class="post-user-info">
+                            <span class="post-username">ADMINISTRATOR</span>
+                            <span class="post-time">${post.date}</span>
+                        </div>
+                    </div>
+                    <div class="post-image-container">
+                        <img src="${post.image}" alt="Update Image" onerror="this.src='https://placehold.co/400x400?text=IMAGE+EXPIRED'">
+                    </div>
+                    <div class="post-caption" style="padding: 20px 15px;">
+                        ${post.caption.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `).join('');
         }
     };
 
@@ -370,6 +453,7 @@
 
         showMemberArea: (user) => {
             if (ui.get('auth-section')) ui.get('auth-section').style.display = 'none';
+            if (ui.get('strength-slides')) ui.get('strength-slides').style.display = 'none';
             if (ui.get('member-slider-section')) ui.get('member-slider-section').style.display = 'none';
             if (ui.get('member-area')) ui.get('member-area').style.display = 'block';
             if (ui.get('main-menu-trigger')) { ui.get('main-menu-trigger').style.display = 'flex'; ui.get('main-menu-trigger').onclick = ui.toggleMenu; }
@@ -381,6 +465,7 @@
                 else if (photo) { photo.style.display = 'none'; pt.innerHTML = '<span style="font-size: 1.2rem;">👤</span>'; }
             }
             if (ui.get('edit-name')) ui.get('edit-name').value = user.first_name;
+            blog.init();
         },
 
         logout: () => { localStorage.removeItem('logged_user'); window.location.reload(); },
@@ -409,6 +494,7 @@
     };
 
     window.ui = ui;
+    window.blog = blog;
     window.days = days;
     window.numbers = numbers;
     window.auth = auth;

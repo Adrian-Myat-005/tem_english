@@ -158,13 +158,45 @@
         </header>
 
         <main>
+            <!-- Membership Strength Slides -->
+            <section id="strength-slides" class="strength-container">
+                <div class="slides-wrapper" id="slides-wrapper">
+                    <!-- Slide 1: Count -->
+                    <div class="strength-slide card">
+                        <div class="slide-content">
+                            <span class="slide-icon">◈</span>
+                            <h3 id="slide-member-count">0 MEMBERS</h3>
+                            <p class="hero-text">Active participants in our internal learning circle.</p>
+                        </div>
+                    </div>
+                    <!-- Slide 2: Access -->
+                    <div class="strength-slide card">
+                        <div class="slide-content">
+                            <span class="slide-icon">▣</span>
+                            <h3>INTERNAL ACCESS</h3>
+                            <p class="hero-text">Exclusive tools and resources available via Telegram.</p>
+                        </div>
+                    </div>
+                    <!-- Slide 3: Growth -->
+                    <div class="strength-slide card">
+                        <div class="slide-content">
+                            <span class="slide-icon">⬖</span>
+                            <h3>CURATED CONTENT</h3>
+                            <p class="hero-text">Structured curriculum designed for focused practice.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-indicators" id="slide-indicators">
+                    <span class="indicator active"></span>
+                    <span class="indicator"></span>
+                    <span class="indicator"></span>
+                </div>
+            </section>
+
             <!-- Member Slider Section -->
             <section id="member-slider-section" class="slider-container">
                 <div class="slider-track" id="member-slider-track">
                     <!-- Dynamic Member Profiles -->
-                </div>
-                <div class="member-count-badge" id="member-count">
-                    0 MEMBERS JOINED
                 </div>
             </section>
 
@@ -181,13 +213,13 @@
             <section id="member-area" style="display: none;">
                 <div class="member-content">
                     <div class="card">
-                        <h3>Status: Active</h3>
-                        <p class="hero-text">Welcome to the inner circle. Your registration is confirmed.</p>
+                        <span class="member-name">OFFICIAL UPDATES</span>
+                        <p class="hero-text">Latest curriculum and administrative announcements.</p>
                     </div>
-                    
-                    <div class="card">
-                        <h3>Next Steps</h3>
-                        <p class="hero-text">Wait for administrative broadcast for upcoming curriculum updates.</p>
+
+                    <!-- Blog Feed Container -->
+                    <div id="blog-feed" class="feed-container">
+                        <!-- Dynamic Posts Injected Here -->
                     </div>
                 </div>
             </section>
@@ -197,6 +229,9 @@
             <p>&copy; 2026 INTERNAL ACCESS ONLY</p>
         </footer>
     </div>
+
+    <!-- Post Creation Modal (Removed) -->
+
 
     <script src="script.js"></script>
 </body>
