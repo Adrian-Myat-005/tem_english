@@ -52,15 +52,22 @@
                     return;
                 }
 
-                container.innerHTML = friends.map(f => `
+                container.innerHTML = friends.map(f => {
+                    const dmUrl = f.username && f.username !== 'N/A' 
+                        ? `https://t.me/${f.username}` 
+                        : `tg://user?id=${f.id}`;
+                    
+                    return `
                     <div class="friend-row">
                         <img class="friend-photo" src="${f.photo || 'https://placehold.co/100x100?text=👤'}" alt="${f.name}" onerror="this.src='https://placehold.co/100x100?text=👤'">
                         <div class="friend-info">
                             <span class="friend-name">${f.name}</span>
                             <span class="friend-status">ACTIVE</span>
                         </div>
+                        <button class="tactile-button small-button dm-btn" onclick="window.open('${dmUrl}', '_blank')">💬 DM</button>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             } catch (e) {
                 container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">UNABLE TO CONNECT</p></div>';
             }

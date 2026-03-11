@@ -154,7 +154,12 @@ function doGet(e) {
   } 
   
   if (type === 'get_students') {
-    return ContentService.createTextOutput(JSON.stringify(students.map(s => ({ name: s.name, photo: s.photo_url || '' })))).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify(students.map(s => ({ 
+      id: s.id,
+      name: s.name, 
+      username: s.username,
+      photo: s.photo_url || '' 
+    })))).setMimeType(ContentService.MimeType.JSON);
   }
 
   if (type === 'get_blog_posts') {

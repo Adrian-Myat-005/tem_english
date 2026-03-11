@@ -541,9 +541,15 @@ textarea {
     object-fit: cover;
 }
 
-.friend-info { display: flex; flex-direction: column; }
+.friend-info { display: flex; flex-direction: column; flex-grow: 1; }
 .friend-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
 .friend-status { font-size: 0.6rem; color: #008800; font-weight: 700; letter-spacing: 0.05em; }
+
+.dm-btn {
+    padding: 10px 14px !important;
+    font-size: 0.6rem !important;
+    white-space: nowrap;
+}
 
 /* TOOLS LIST */
 .tools-list {
