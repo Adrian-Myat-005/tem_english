@@ -1,63 +1,85 @@
-/* Minimalist Cream UI for Tem English */
+/* Perfected Minimalist Tactile UI for Tem English */
 
 :root {
-    --bg-color: #fdfaf0; /* Soft cream */
-    --text-color: #333333;
+    --bg-color: #fcf9f2;      /* Refined Cream */
+    --accent-color: #f5f0e1;   /* Slightly darker cream for depth */
+    --text-color: #2c2c2c;     /* Soft Charcoal */
     --button-bg: #ffffff;
-    --button-shadow: #d1d1d1;
-    --button-border: #bbbbbb;
+    --button-shadow: #c8c2b3;  /* Solid 3D shadow color */
+    --button-border: #a19b8d;  /* Border color for tactile edges */
+    --input-shadow: rgba(0, 0, 0, 0.05);
+    --transition-speed: 0.1s;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    -webkit-tap-highlight-color: transparent; /* Disable tap highlight */
-    touch-action: manipulation; /* Disable double-tap zoom */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace; /* Monospaced for technical elegance */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    text-align: center;
+    padding: 20px;
+    /* Recessed page effect */
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.02);
 }
 
 .container {
-    max-width: 600px;
-    width: 90%;
-    position: relative; /* For profile-trigger positioning if needed, or use body */
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    padding: 40px 20px;
 }
 
-/* Profile Trigger (Top Right) */
+/* Profile Trigger (Top Right Tactile) */
 .profile-trigger {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 30px;
+    right: 30px;
     cursor: pointer;
     z-index: 1000;
+    background: var(--button-bg);
+    border: 1px solid var(--button-border);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 0 0 var(--button-shadow);
+}
+
+.profile-trigger:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 0 var(--button-shadow);
 }
 
 #user-photo {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    border: 2px solid var(--button-border);
-    background-color: var(--button-bg);
+    object-fit: cover;
+    filter: grayscale(100%); /* Monochrome aesthetic */
 }
 
-/* Popup Modal */
+/* Popup Modal (Perfected) */
 .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(44, 44, 44, 0.2);
+    backdrop-filter: blur(2px);
     display: none;
     justify-content: center;
     align-items: center;
@@ -66,155 +88,176 @@ body {
 
 .popup-content {
     background-color: var(--bg-color);
-    padding: 2.5rem;
+    padding: 40px;
     width: 90%;
-    max-width: 320px;
+    max-width: 360px;
     position: relative;
-    border: 1px solid var(--button-border);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border: 2px solid var(--button-border);
+    box-shadow: 0 15px 0 0 var(--button-shadow); /* Massive tactile shadow */
 }
 
 .close-popup {
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 15px;
+    right: 20px;
     background: none;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    color: #999;
+    color: var(--text-color);
+    font-weight: 300;
 }
 
 .popup-body {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    margin-top: 1rem;
+    gap: 30px;
 }
 
 .edit-name-group {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 12px;
     text-align: left;
 }
 
 .edit-name-group label {
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-    color: #666;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #888;
 }
 
 .small-button {
     width: 100% !important;
-    padding: 0.8rem !important;
+    padding: 12px !important;
     font-size: 0.8rem !important;
 }
 
 .logout-group {
-    border-top: 1px solid #eee;
-    padding-top: 2rem;
-    display: flex;
-    justify-content: center;
+    border-top: 1px solid var(--accent-color);
+    padding-top: 30px;
 }
 
-.logout-group .tactile-button {
-    width: 100%;
-}
-
+/* Header */
 header h1 {
-    font-weight: 300;
-    letter-spacing: 0.15em;
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
 }
 
-.hero p {
-    font-size: 1.1rem;
-    margin-bottom: 3rem;
-    color: #666;
-}
-
+/* Auth Box */
 .auth-box {
-    margin: 2rem auto;
-    max-width: 300px;
+    background-color: var(--accent-color);
+    padding: 40px 30px;
+    border: 1px solid var(--button-border);
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 20px;
     align-items: center;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.03);
 }
 
 .auth-box h2 {
-    font-weight: 300;
-    font-size: 1.2rem;
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
 }
 
+.hero-text {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Recessed Input */
 input {
     width: 100%;
-    padding: 1rem;
-    background-color: var(--button-bg);
+    padding: 15px;
+    background-color: var(--bg-color);
     border: 1px solid var(--button-border);
     color: var(--text-color);
     font-family: inherit;
     font-size: 0.9rem;
     outline: none;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* Subtle inner shadow for tactile feel */
+    box-shadow: inset 0 4px 6px var(--input-shadow);
 }
 
 input:focus {
-    border-color: #999;
+    background-color: #fff;
+    border-color: var(--text-color);
 }
 
-.toggle-text {
-    font-size: 0.75rem;
-    color: #888;
-    margin-top: 1rem;
-}
-
-.toggle-text span {
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 600;
-    color: var(--text-color);
-}
-
-.actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-/* Tactile Button Styling */
+/* Tactile Button (Perfected) */
 .tactile-button {
     background-color: var(--button-bg);
     border: 1px solid var(--button-border);
     color: var(--text-color);
-    padding: 1rem 2.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    padding: 16px 32px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     cursor: pointer;
-    width: 200px;
+    width: auto;
+    min-width: 200px;
     position: relative;
     outline: none;
     
     /* Solid 3D Shadow */
-    box-shadow: 0 4px 0 0 var(--button-shadow);
-    transition: none; /* Disable all animations/transitions */
+    box-shadow: 0 6px 0 0 var(--button-shadow);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
 
 .tactile-button:active {
-    top: 2px;
+    transform: translateY(4px);
     box-shadow: 0 2px 0 0 var(--button-shadow);
 }
 
-footer {
-    margin-top: 4rem;
-    font-size: 0.7rem;
+.tactile-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 0 0 var(--button-shadow);
+}
+
+/* Member Area (Placeholder for content) */
+.member-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.card {
+    background: var(--button-bg);
+    border: 1px solid var(--button-border);
+    padding: 30px;
+    text-align: left;
+    box-shadow: 0 4px 0 0 var(--button-shadow);
+}
+
+.card h3 {
+    font-size: 0.8rem;
     letter-spacing: 0.1em;
-    color: #999;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+footer {
+    margin-top: 60px;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: #aaa;
+    text-transform: uppercase;
 }

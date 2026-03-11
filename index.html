@@ -3,54 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tem English</title>
+    <title>TEM ENGLISH</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Top Right Profile -->
-        <div id="user-profile-trigger" class="profile-trigger" style="display: none;">
-            <img id="user-photo" src="" alt="Profile">
-        </div>
+    <!-- Top Right Profile Trigger -->
+    <div id="user-profile-trigger" class="profile-trigger" style="display: none;">
+        <img id="user-photo" src="" alt="👤">
+    </div>
 
-        <!-- Profile Popup -->
-        <div id="profile-popup" class="popup-overlay" style="display: none;">
-            <div class="popup-content">
-                <button class="close-popup" onclick="ui.togglePopup()">✕</button>
-                <div class="popup-body">
-                    <div class="edit-name-group">
-                        <label for="edit-name">FULL NAME</label>
-                        <input type="text" id="edit-name" placeholder="Enter name">
-                        <button class="tactile-button small-button" onclick="auth.updateName()">UPDATE</button>
-                    </div>
-                    <div class="logout-group">
-                        <button class="tactile-button" onclick="auth.logout()">LOGOUT</button>
-                    </div>
+    <!-- Profile Popup Overlay -->
+    <div id="profile-popup" class="popup-overlay">
+        <div class="popup-content">
+            <button class="close-popup" onclick="ui.togglePopup()">✕</button>
+            <div class="popup-body">
+                <div class="edit-name-group">
+                    <label>Profile Identity</label>
+                    <input type="text" id="edit-name" placeholder="Full Name">
+                    <button class="tactile-button small-button" onclick="auth.updateName()">Confirm Update</button>
+                </div>
+                <div class="logout-group">
+                    <button class="tactile-button" onclick="auth.logout()">Terminate Session</button>
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="container">
         <header>
             <h1>TEM ENGLISH</h1>
         </header>
+
         <main>
+            <!-- Auth Section -->
             <section id="auth-section">
                 <div class="auth-box">
-                    <h2>MEMBER ACCESS</h2>
-                    <p class="hero-text">Join the community via Telegram.</p>
-                    <!-- Telegram Login Widget Placeholder -->
+                    <h2>Authentication</h2>
+                    <p class="hero-text">Access the internal learning environment via Telegram.</p>
                     <div id="telegram-login-container"></div>
                 </div>
             </section>
 
+            <!-- Member Area -->
             <section id="member-area" style="display: none;">
-                <!-- Main page content left blank as requested -->
+                <div class="member-content">
+                    <div class="card">
+                        <h3>Status: Active</h3>
+                        <p class="hero-text">Welcome to the inner circle. Your registration is confirmed.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Next Steps</h3>
+                        <p class="hero-text">Wait for administrative broadcast for upcoming curriculum updates.</p>
+                    </div>
+                </div>
             </section>
         </main>
+
         <footer>
-            <p>&copy; 2026 TEM ENGLISH</p>
+            <p>&copy; 2026 INTERNAL ACCESS ONLY</p>
         </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
