@@ -16,25 +16,35 @@ function doPost(e) {
 
   if (chatId !== ADMIN_ID) return;
 
-  // Handle Photo Posts
+  // 1. Handle Photo Posts (Blog)
   if (data.message.photo) {
     const photo = data.message.photo[data.message.photo.length - 1];
     const fileResponse = UrlFetchApp.fetch(`https://api.telegram.org/bot${TOKEN}/getFile?file_id=${photo.file_id}`);
     const filePath = JSON.parse(fileResponse.getContentText()).result.file_path;
     const imageUrl = `https://api.telegram.org/file/bot${TOKEN}/${filePath}`;
 
-    savePost(imageUrl, data.message.caption || "No caption");
-    return sendMessage(chatId, "✅ *Photo Published!*", adminPanel());
+    savePost(imageUrl, data.message.caption || "Official Update");
+    return sendMessage(chatId, "✅ *Photo Published to Blog!*", adminPanel());
   }
 
-  // Handle Links/Text
+  // 2. Handle YouTube Links or Text Posts
   if (text && !text.startsWith("/")) {
     savePost(text, text.includes("youtu") ? "Video Update" : text);
-    return sendMessage(chatId, "✅ *Text/Link Published!*", adminPanel());
+    return sendMessage(chatId, "✅ *Link/Text Published to Blog!*", adminPanel());
   }
 
+  // 3. Dashboard Logic
   if (text === "/start" || text === "🛠 Dashboard") {
-    sendMenu(chatId);
+    sendPersistentMenu(chatId);
+    sendDashboard(chatId);
+  }
+  
+  // 4. Broadcast
+  if (text.startsWith("/broadcast ")) {
+    const msg = text.replace("/broadcast ", "");
+    const students = JSON.parse(store.getProperty('students') || "[]");
+    students.forEach(s => sendMessage(s.id, `📢 *Update from Tem English:*\n\n${msg}`));
+    sendMessage(chatId, `✅ Sent to ${students.length} students.`);
   }
 }
 
@@ -44,29 +54,24 @@ function savePost(media, caption) {
   store.setProperty('blog_posts', JSON.stringify(posts.slice(0, 20)));
 }
 
-function sendMenu(chatId) {
-  const text = "💎 *TEM ENGLISH AUTOMATION LAB*\nOne-click controls for your internal environment.";
-  const replyKeyboard = {
+function sendPersistentMenu(chatId) {
+  const markup = {
     keyboard: [[{ text: "🛠 Dashboard" }]],
     resize_keyboard: true,
     persistent: true
   };
-  
-  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-  const payload = {
-    chat_id: chatId,
-    text: text,
-    parse_mode: "Markdown",
-    reply_markup: JSON.stringify({ ...adminPanel(), ...replyKeyboard })
-  };
-  UrlFetchApp.fetch(url, { method: "post", contentType: "application/json", payload: JSON.stringify(payload) });
+  sendRaw(chatId, "Automation Lab Active.", markup);
+}
+
+function sendDashboard(chatId) {
+  sendRaw(chatId, "💎 *ADMIN CONTROL PANEL*", adminPanel());
 }
 
 function adminPanel() {
   return {
     inline_keyboard: [
-      [{ text: "📝 MANAGE POSTS", callback_data: "manage_blog" }, { text: "👥 STUDENTS", callback_data: "list_students" }],
-      [{ text: "📢 BROADCAST", callback_data: "prep_broadcast" }, { text: "♻️ REFRESH SERVER", callback_data: "refresh" }]
+      [{ text: "📝 MANAGE POSTS", callback_data: "manage_blog" }, { text: "👥 LIST STUDENTS", callback_data: "list_students" }],
+      [{ text: "📢 HELP: BROADCAST", callback_data: "help_broadcast" }, { text: "🗑 CLEAR ALL", callback_data: "confirm_clear" }]
     ]
   };
 }
@@ -78,45 +83,45 @@ function handleCallback(query) {
 
   if (data === "manage_blog") {
     const posts = JSON.parse(store.getProperty('blog_posts') || "[]");
-    if (!posts.length) return editMessage(chatId, messageId, "📭 Feed is empty.", adminPanel());
+    if (!posts.length) return editMessage(chatId, messageId, "📭 Blog is empty.", adminPanel());
     
-    let keyboard = posts.slice(0, 8).map(p => [
-      { text: `📝 Edit`, callback_data: `edit_post_${p.id}` },
-      { text: `🗑 Del: ${p.caption.substring(0, 10)}...`, callback_data: `del_post_${p.id}` }
-    ]);
-    keyboard.push([{ text: "⬅️ Back", callback_data: "back" }]);
-    editMessage(chatId, messageId, "🛠 *POST MANAGER*", { inline_keyboard: keyboard });
+    let keyboard = posts.slice(0, 8).map(p => [{ text: `🗑 DEL: ${p.caption.substring(0, 15)}...`, callback_data: `del_post_${p.id}` }]);
+    keyboard.push([{ text: "⬅️ BACK", callback_data: "back" }]);
+    editMessage(chatId, messageId, "🛠 *BLOG MANAGER*", { inline_keyboard: keyboard });
   }
   else if (data.startsWith("del_post_")) {
     const id = data.replace("del_post_", "");
     let posts = JSON.parse(store.getProperty('blog_posts') || "[]").filter(p => p.id !== id);
     store.setProperty('blog_posts', JSON.stringify(posts));
-    editMessage(chatId, messageId, "✅ Post removed permanently.", adminPanel());
-  }
-  else if (data.startsWith("edit_post_")) {
-    const id = data.replace("edit_post_", "");
-    editMessage(chatId, messageId, `✏️ *To Edit this post:*\nSend the new caption followed by the ID:\n\n\`ID: ${id}\`\n\n(Simply copy the ID and paste it after your new text)`, adminPanel());
+    editMessage(chatId, messageId, "✅ Post deleted.", adminPanel());
   }
   else if (data === "list_students") {
     const students = JSON.parse(store.getProperty('students') || "[]");
-    let list = "👥 *REGISTERED STUDENTS:*\n\n" + (students.map((s, i) => `${i+1}. ${s.name} (ID: ${s.id})`).join("\n") || "No students.");
+    let list = "👥 *STUDENTS:*\n\n" + (students.map((s, i) => `${i+1}. ${s.name}`).join("\n") || "No students.");
     editMessage(chatId, messageId, list, adminPanel());
   }
   else if (data === "back") {
-    editMessage(chatId, messageId, "💎 *AUTOMATION LAB*", adminPanel());
+    editMessage(chatId, messageId, "💎 *ADMIN CONTROL PANEL*", adminPanel());
+  }
+  else if (data === "help_broadcast") {
+    editMessage(chatId, messageId, "📢 *BROADCAST*\nType: `/broadcast [message]`", adminPanel());
   }
 }
 
-function editMessage(chatId, messageId, text, keyboard) {
-  const url = `https://api.telegram.org/bot${TOKEN}/editMessageText`;
-  const payload = { chat_id: chatId, message_id: messageId, text: text, parse_mode: "Markdown", reply_markup: JSON.stringify(keyboard) };
+function sendRaw(chatId, text, markup) {
+  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+  const payload = { chat_id: chatId, text: text, parse_mode: "Markdown", reply_markup: JSON.stringify(markup) };
   UrlFetchApp.fetch(url, { method: "post", contentType: "application/json", payload: JSON.stringify(payload) });
 }
 
-function sendMessage(chatId, text, keyboard) {
-  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-  const payload = { chat_id: chatId, text: text, parse_mode: "Markdown", reply_markup: JSON.stringify(keyboard) };
+function editMessage(chatId, messageId, text, markup) {
+  const url = `https://api.telegram.org/bot${TOKEN}/editMessageText`;
+  const payload = { chat_id: chatId, message_id: messageId, text: text, parse_mode: "Markdown", reply_markup: JSON.stringify(markup) };
   UrlFetchApp.fetch(url, { method: "post", contentType: "application/json", payload: JSON.stringify(payload) });
+}
+
+function sendMessage(chatId, text, markup) {
+  sendRaw(chatId, text, markup);
 }
 
 function doGet(e) {
