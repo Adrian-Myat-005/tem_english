@@ -21,17 +21,23 @@ function doPost(e) {
     students.forEach((s, i) => list += `${i+1}. ${s.name} (@${s.username || 'N/A'})\nID: \`${s.id}\`\n\n`);
     sendMessage(chatId, list);
   }
-  else if (text.startsWith("/remove ")) {
-    const idToRemove = text.replace("/remove ", "").trim();
+  else if (text.startsWith("/remove")) {
+    const match = text.match(/\/remove\s+(\d+)/);
+    if (!match) {
+      return sendMessage(chatId, "⚠️ *Format Error*\nUse: `/remove [id]`\nExample: `/remove 123456`\n\n_Note: Ensure there is a space after the command._");
+    }
+
+    const idToRemove = match[1].trim();
     let students = JSON.parse(store.getProperty('students') || "[]");
     const initialCount = students.length;
+    
     students = students.filter(s => String(s.id) !== idToRemove);
     
     if (students.length < initialCount) {
       store.setProperty('students', JSON.stringify(students));
-      sendMessage(chatId, `✅ Removed student with ID: \`${idToRemove}\``);
+      sendMessage(chatId, `✅ *Success*\nRemoved student with ID: \`${idToRemove}\``);
     } else {
-      sendMessage(chatId, `❌ No student found with ID: \`${idToRemove}\``);
+      sendMessage(chatId, `❌ *Not Found*\nNo student found with ID: \`${idToRemove}\` in the list.`);
     }
   }
   else if (text.startsWith("/broadcast ")) {
@@ -43,6 +49,9 @@ function doPost(e) {
   else if (text === "/clear") {
     store.setProperty('students', "[]");
     sendMessage(chatId, "🗑 List cleared.");
+  }
+  else {
+    sendMessage(chatId, "❓ *Unknown Command*\nTry /start to see the menu.");
   }
 }
 
