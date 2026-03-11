@@ -46,7 +46,7 @@
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=get_students`);
                 const friends = await response.json();
-                
+
                 if (!friends || friends.length === 0) {
                     container.innerHTML = '<div class="card" style="text-align:center;"><p class="hero-text">ALONE FOR NOW</p></div>';
                     return;
@@ -247,7 +247,6 @@
             ui.get('days-practice-area').style.display = 'none';
             ui.get('days-result-screen').style.display = 'none';
             ui.get('days-title').textContent = 'DAYS PRACTICE';
-            ui.toggleMenu();
         },
 
         close: () => {
@@ -347,7 +346,6 @@
             ui.get('flashcard-area').style.display = 'none';
             ui.get('result-screen').style.display = 'none';
             ui.get('lesson-title').textContent = 'NUMBERS PRACTICE';
-            ui.toggleMenu();
         },
 
         close: () => {
@@ -485,7 +483,7 @@
             if (ui.get('strength-slides')) ui.get('strength-slides').style.display = 'none';
             if (ui.get('member-slider-section')) ui.get('member-slider-section').style.display = 'none';
             if (ui.get('member-area')) ui.get('member-area').style.display = 'block';
-            if (ui.get('main-menu-trigger')) { ui.get('main-menu-trigger').style.display = 'flex'; ui.get('main-menu-trigger').onclick = ui.toggleMenu; }
+            
             const pt = ui.get('user-profile-trigger');
             if (pt) {
                 pt.style.display = 'flex'; pt.onclick = ui.togglePopup;
