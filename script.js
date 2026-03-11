@@ -721,6 +721,7 @@
 
     window.ui = ui;
     window.blog = blog;
+    window.prepositions = prepositions;
     window.days = days;
     window.numbers = numbers;
     window.auth = auth;
