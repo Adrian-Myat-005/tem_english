@@ -11,7 +11,7 @@ A minimalist English learning site with a cream-colored, tactile UI.
 - **Bot Username**: `@Tem_english_bot`
 - **Bot Token**: `8738017008:AAE8pb--I9oZoMrzZaKNLS97UThQeFk5LZk`
 - **Admin Chat ID**: `6172408005`
-- **Google Script Web App URL**: `https://script.google.com/macros/s/AKfycbxTztosNbOnTP8St-G_xZfCYC_h7PplZGaVTlnwtpjPfsYiS0eqX4MRwt3SjCxFCY_H-A/exec`
+- **Google Script Web App URL**: `https://script.google.com/macros/s/AKfycbwn5GbQunpG2nIMPMJ4w3ES-_PPn-f19T9WMw44mnn8sKmpRaVw59z-oICNiAsQ_YnmnA/exec`
 - **GitHub Repository**: `https://github.com/Adrian-Myat-005/tem_english`
 
 ## System Architecture
