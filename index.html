@@ -239,6 +239,73 @@
     <!-- Post Creation Modal (Removed) -->
 
 
+    <!-- Prepositions Practice Section (Full Screen Overlay) -->
+    <div id="prepositions-section" class="full-overlay" style="display: none;">
+        <div class="overlay-header">
+            <button class="back-link" id="prep-back-btn" onclick="prepositions.back()">← BACK</button>
+            <h2 id="prep-title">PREPOSITIONS</h2>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="prep-main-menu" class="lesson-grid">
+            <button class="tactile-button" onclick="prepositions.showLearnList()">1. LEARN</button>
+            <button class="tactile-button" onclick="prepositions.startTest()">2. TEST</button>
+        </div>
+
+        <!-- Learn List View -->
+        <div id="prep-learn-list" style="display: none;">
+            <div id="prep-list-container" class="lesson-grid">
+                <!-- Word buttons injected here -->
+            </div>
+        </div>
+
+        <!-- Lesson View -->
+        <div id="prep-lesson-view" style="display: none;">
+            <div id="prep-lesson-content" class="card">
+                <!-- Notes injected here -->
+            </div>
+            
+            <div class="exercise-block card">
+                <h3 class="member-name">PRACTICE</h3>
+                <div id="prep-ex-question" class="hero-text" style="margin-bottom: 15px;"></div>
+                <div id="prep-ex-options" class="options-grid"></div>
+                
+                <div class="card-controls">
+                    <button id="prep-ex-confirm" class="tactile-button" onclick="prepositions.confirmExercise()">Confirm</button>
+                    <button id="prep-ex-next" class="tactile-button hidden" onclick="prepositions.nextExercise()">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test View -->
+        <div id="prep-test-view" style="display: none;">
+            <div class="progress-container">
+                <div id="prep-test-progress">1 / 100</div>
+                <div class="progress-bar"><div id="prep-test-fill" class="progress-fill"></div></div>
+            </div>
+            
+            <div class="card" style="margin-top: 20px;">
+                <div id="prep-test-question" class="question"></div>
+                <div id="prep-test-options" class="options-grid" style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="card-controls">
+                <button id="prep-test-confirm" class="tactile-button" onclick="prepositions.confirmTest()">Confirm</button>
+                <button id="prep-test-next" class="tactile-button hidden" onclick="prepositions.nextTest()">Next</button>
+            </div>
+        </div>
+
+        <!-- Result View -->
+        <div id="prep-result-view" class="result-screen" style="display: none;">
+            <div class="card">
+                <h3>TEST COMPLETE</h3>
+                <div class="final-score" id="prep-final-score">0 / 100</div>
+                <p id="prep-result-msg" class="hero-text">Keep practicing!</p>
+                <button class="tactile-button" onclick="prepositions.start()">BACK TO MENU</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

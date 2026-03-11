@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preposition App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 80vh;
+        }
+        .hidden { display: none !important; }
+        
+        h1, h2, h3 { color: #222; }
+        
+        /* Main Menu Buttons */
+        .main-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .main-btn:active { background-color: #0056b3; }
+        
+        /* Nav Buttons */
+        .nav-btn {
+            padding: 8px 15px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        /* Learn List */
+        .lesson-list-btn {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            background: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Lesson View */
+        .lesson-notes {
+            background: #fdfdfd;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        .lesson-notes h3 { margin-top: 0; }
+        .lesson-notes blockquote { background: #eee; padding: 5px 10px; margin: 5px 0; }
+        
+        /* Test & Exercise Styles */
+        .progress { font-size: 0.9em; color: #666; margin-bottom: 10px; text-align: right; }
+        .question { font-size: 1.1em; margin-bottom: 15px; font-weight: bold; }
+        .options label {
+            display: block;
+            margin: 8px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="radio"] { margin-right: 10px; }
+        
+        /* Minimal small buttons */
+        .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 5px;
+            display: inline-block;
+        }
+        .btn:active { background-color: #ddd; }
+        .btn-primary { background-color: #007bff; color: white; border: none; }
+        .btn-primary:active { background-color: #0056b3; }
+        
+        .result-display { margin-top: 15px; font-weight: bold; font-size: 1em; }
+        .correct { color: green; }
+        .wrong { color: red; }
+        .true-answer {
+            margin-top: 10px;
+            font-size: 0.9em;
+            background: #eef;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .exercise-block {
+            border-top: 2px dashed #ccc;
+            padding-top: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="main-menu">
+        <h2>Preposition App</h2>
+        <button class="main-btn" onclick="showView('learn-list-view')">1. Learn</button>
+        <button class="main-btn" onclick="startTest()">2. Test</button>
+    </div>
+
+    <div id="learn-list-view" class="hidden">
+        <button class="nav-btn" onclick="showView('main-menu')">← Back to Menu</button>
+        <h2>Select a Lesson</h2>
+        <div id="lesson-buttons-container"></div>
+    </div>
+
+    <div id="lesson-view" class="hidden">
+        <button class="nav-btn" onclick="showView('learn-list-view')">← Back to Lessons</button>
+        <h2 id="lesson-title">Lesson</h2>
+        <div id="lesson-content" class="lesson-notes"></div>
+        
+        <div class="exercise-block" id="lesson-exercise-container">
+            <h3>Practice Exercises</h3>
+            <div id="exercise-question-text" class="question"></div>
+            <div id="exercise-options" class="options"></div>
+            <button id="ex-confirm-btn" class="btn btn-primary" onclick="confirmExercise()">Confirm</button>
+            <div id="ex-result" class="result-display hidden"></div>
+            <button id="ex-show-ans-btn" class="btn hidden" onclick="showExerciseAnswer()">Show Answer</button>
+            <button id="ex-next-btn" class="btn hidden" onclick="nextExercise()">Next</button>
+            <div id="ex-true-answer" class="true-answer hidden"></div>
+        </div>
+    </div>
+
+    <div id="test-view" class="hidden">
+        <button class="nav-btn" onclick="showView('main-menu')">← Quit Test</button>
+        <div class="progress" id="test-progress"></div>
+        <div class="question" id="test-question-text"></div>
+        <div class="options" id="test-options"></div>
+        
+        <button id="test-confirm-btn" class="btn btn-primary" onclick="confirmTest()">Confirm</button>
+        
+        <div id="test-result" class="result-display hidden"></div>
+        <button id="test-show-ans-btn" class="btn hidden" onclick="showTestAnswer()">Show Answer</button>
+        <button id="test-next-btn" class="btn hidden" onclick="nextTestQuestion()">Next</button>
+        
+        <div id="test-true-answer" class="true-answer hidden"></div>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // DATA: LESSONS (First 5 complete as template)
+    // ==========================================
+    const lessonsData = [
+        {
+            word: "About",
+            notes: `<h3>1. Subject Matter (အကြောင်းအရာ)</h3><p>စကားပြောဆိုမှု သို့မဟုတ် အကြောင်းအရာကို ပြသရန် သုံးသည်။</p><h3>2. Approximation (ခန့်မှန်းခြေ)</h3><p>ကိန်းဂဏန်း ခန့်မှန်းခြေကို ပြရန် သုံးသည်။</p>`,
+            exercises: [
+                { options: ["The pencil is about the table.", "I am reading a book about history.", "He is standing about her."], answer: "I am reading a book about history." },
+                { options: ["It is about 5 o'clock now.", "The clock is about the wall.", "Put the rug about the floor."], answer: "It is about 5 o'clock now." },
+                { options: ["She sat about the chair.", "The cat is about the bed.", "Tell me about your trip."], answer: "Tell me about your trip." }
+            ]
+        },
+        {
+            word: "Above",
+            notes: `<h3>1. Higher Position (ပိုမြင့်သော နေရာ)</h3><p>ထိမနေဘဲ အပေါ်ဘက်တွင် ရှိနေခြင်း။</p>`,
+            exercises: [
+                { options: ["I was born above July.", "The sun is above the clouds.", "He is from above Myanmar."], answer: "The sun is above the clouds." },
+                { options: ["The picture hangs above the sofa.", "I am looking above my glasses.", "He is good above playing guitar."], answer: "The picture hangs above the sofa." },
+                { options: ["She is married above a doctor.", "I received a letter above my friend.", "The birds are flying above the trees."], answer: "The birds are flying above the trees." }
+            ]
+        },
+        {
+            word: "Across",
+            notes: `<h3>1. Movement (ဖြတ်သန်းသွားခြင်း)</h3><p>တစ်ဖက်မှ အခြားတစ်ဖက်သို့ ဖြတ်သွားခြင်း။</p>`,
+            exercises: [
+                { options: ["He is afraid across spiders.", "He ran across the bridge.", "The keys are across the pocket."], answer: "He ran across the bridge." },
+                { options: ["The shop is across the street.", "I am interested across coding.", "She is proud across her work."], answer: "The shop is across the street." },
+                { options: ["He died across a heart attack.", "We walked across the river.", "The glass is full across water."], answer: "We walked across the river." }
+            ]
+        },
+        {
+            word: "Against",
+            notes: `<h3>1. Physical Contact (မှီထားခြင်း)</h3><p>နံရံ သို့မဟုတ် အရာတစ်ခုကို အားပြုမှီထားခြင်း။</p>`,
+            exercises: [
+                { options: ["Don't lean against the glass.", "I am looking against my keys.", "He arrived against time for dinner."], answer: "Don't lean against the glass." },
+                { options: ["She distributed candy against the kids.", "They argued against politics.", "The rain beat against the window."], answer: "The rain beat against the window." },
+                { options: ["The cat hid against the bed.", "I have been waiting against three hours.", "Put the ladder against the wall."], answer: "Put the ladder against the wall." }
+            ]
+        },
+        {
+            word: "Along",
+            notes: `<h3>1. Parallel (တစ်လျှောက်)</h3><p>အလျားလိုက်အတိုင်း သွားခြင်း။</p>`,
+            exercises: [
+                { options: ["The bird flew along the house.", "He is standing along front of the mirror.", "We walked along the path."], answer: "We walked along the path." },
+                { options: ["He parked his car along the building.", "Trees grow along the road.", "The keys slipped along the cracks."], answer: "Trees grow along the road." },
+                { options: ["He climbed along the ladder.", "The boat moved along the shore.", "She fell along the stairs."], answer: "The boat moved along the shore." }
+            ]
+        },
+        {
+            word: "Among",
+            notes: `<h3>1. Group (အုပ်စုကြား)</h3><p>လူ သို့မဟုတ် အရာ ၃ ခုထက်ပိုသော အုပ်စုကြား။</p>`,
+            exercises: [
+                { options: ["I am waiting among the bus stop.", "He is famous among his friends.", "The train went among the tunnel."], answer: "He is famous among his friends." },
+                { options: ["Look among the stars.", "The treasure was buried among the sand.", "Divide the cake among the kids."], answer: "Divide the cake among the kids." },
+                { options: ["The book is written among Spanish.", "A house among the trees.", "I will see you among Monday."], answer: "A house among the trees." }
+            ]
+        },
+        {
+            word: "Around",
+            notes: `<h3>1. Circular (ပတ်လည်)</h3><p>ပတ်ပတ်လည် ဝန်းရံခြင်း။</p>`,
+            exercises: [
+                { options: ["He works around a manager.", "The book belongs around me.", "They sat around the fire."], answer: "They sat around the fire." },
+                { options: ["Walk around the building.", "He prefers tea around coffee.", "I am sick around this weather."], answer: "Walk around the building." },
+                { options: ["The moon goes around the earth.", "She is capable around passing the test.", "He is fond around chocolate."], answer: "The moon goes around the earth." }
+            ]
+        },
+        {
+            word: "At",
+            notes: `<h3>1. Point (နေရာ)</h3><p>တိကျသောနေရာ သို့မဟုတ် အချိန်။</p>`,
+            exercises: [
+                { options: ["I am at London tomorrow.", "I am at the office.", "He jumped at the pool."], answer: "I am at the office." },
+                { options: ["She sit at him during movie.", "The bird flew at the house.", "Meet me at 5 PM."], answer: "Meet me at 5 PM." },
+                { options: ["Look at the sky.", "I have been waiting at three hours.", "The train went at the tunnel."], answer: "Look at the sky." }
+            ]
+        },
+        {
+            word: "Behind",
+            notes: `<h3>1. Rear (အနောက်ဘက်)</h3><p>အရာတစ်ခု၏ အနောက်ဘက်။</p>`,
+            exercises: [
+                { options: ["The car is behind the house.", "The book is written behind Spanish.", "He is good behind playing guitar."], answer: "The car is behind the house." },
+                { options: ["She relies behind her parents.", "Don't hide behind the door.", "I am interested behind coding."], answer: "Don't hide behind the door." },
+                { options: ["He arrived just behind time.", "She is afraid behind spiders.", "The sun went behind the clouds."], answer: "The sun went behind the clouds." }
+            ]
+        },
+        {
+            word: "Below",
+            notes: `<h3>1. Lower (အောက်ဘက်)</h3><p>အဆင့် သို့မဟုတ် တည်နေရာ ပိုနိမ့်ခြင်း။</p>`,
+            exercises: [
+                { options: ["Sign your name below the line.", "We are traveling below London.", "They argued below politics."], answer: "Sign your name below the line." },
+                { options: ["He arrived just below time.", "She relies below her parents.", "The temperature is below zero."], answer: "The temperature is below zero." },
+                { options: ["I am interested below coding.", "My shoes are below the table.", "He is afraid below spiders."], answer: "My shoes are below the table." }
+            ]
+        },
+        {
+            word: "Beneath",
+            notes: `<h3>1. Underneath (အောက်တည့်တည့်)</h3><p>အောက်ခြေတွင် ဖုံးအုပ်ခံထားရခြင်း။</p>`,
+            exercises: [
+                { options: ["She apologized beneath being late.", "They found gold beneath the floor.", "The train went beneath the tunnel."], answer: "They found gold beneath the floor." },
+                { options: ["He parked his car beneath the building.", "I am looking beneath my glasses.", "Sit beneath the tree shadow."], answer: "Sit beneath the tree shadow." },
+                { options: ["She was born beneath July.", "The store is open beneath 9 AM.", "The valley lies beneath the mountain."], answer: "The valley lies beneath the mountain." }
+            ]
+        },
+        {
+            word: "Beside",
+            notes: `<h3>1. Next To (ဘေးတွင်)</h3><p>ဘေးကပ်လျက် ရှိနေခြင်း။</p>`,
+            exercises: [
+                { options: ["He walked beside the street.", "Sit beside me.", "The keys slipped beside the cracks."], answer: "Sit beside me." },
+                { options: ["She distributed candy beside the kids.", "We stayed indoors beside the storm.", "The bank is beside the hotel."], answer: "The bank is beside the hotel." },
+                { options: ["He will finish work beside Friday.", "Who is standing beside you?", "I can't wait beside the weekend."], answer: "Who is standing beside you?" }
+            ]
+        },
+        {
+            word: "Between",
+            notes: `<h3>1. Middle (အလယ်ကြား)</h3><p>အရာနှစ်ခုကြား။</p>`,
+            exercises: [
+                { options: ["They live between the street from us.", "She leaned between the wall.", "I sat between Tom and Jerry."], answer: "I sat between Tom and Jerry." },
+                { options: ["We walked between the river bank.", "The ball is between the boxes.", "There is a fence between the garden."], answer: "The ball is between the boxes." },
+                { options: ["The temperature is between zero.", "Choose between blue and red.", "The treasure was buried between the sand."], answer: "Choose between blue and red." }
+            ]
+        },
+        {
+            word: "Beyond",
+            notes: `<h3>1. Past (ဟိုဘက်တွင်)</h3><p>ကန့်သတ်ချက် သို့မဟုတ် နေရာထက် ကျော်လွန်ခြင်း။</p>`,
+            exercises: [
+                { options: ["Look beyond the stars.", "This gift is beyond you.", "The village is beyond the hill."], answer: "The village is beyond the hill." },
+                { options: ["The truth is beyond doubt.", "I received a letter beyond my friend.", "He is standing beyond front of the mirror."], answer: "The truth is doubt." },
+                { options: ["Put the box beyond the closet.", "Look beyond the horizon.", "The dog ran beyond the house."], answer: "Look beyond the horizon." }
+            ]
+        },
+        {
+            word: "By",
+            notes: `<h3>1. Nearness (အနီး)</h3><p>ဘေးတွင် သို့မဟုတ် အနီးတွင်။</p><h3>2. Method (နည်းလမ်း)</h3>`,
+            exercises: [
+                { options: ["They waited by the building.", "He climbed by the ladder.", "I live by the sea."], answer: "I live by the sea." },
+                { options: ["Go to work by car.", "She fell by the stairs.", "Take your shoes by."], answer: "Go to work by car." },
+                { options: ["He threw the ball by me.", "The letter was written by him.", "Don't throw stones by the dog."], answer: "The letter was written by him." }
+            ]
+        },
+        {
+            word: "Down",
+            notes: `<h3>1. Descending (အောက်သို့)</h3><p>အထက်မှ အောက်သို့။</p>`,
+            exercises: [
+                { options: ["We walked down the beach.", "Go down the stairs.", "She cut the paper down scissors."], answer: "Go down the stairs." },
+                { options: ["He went to the party down friends.", "I will call you down an hour.", "Sit down on the chair."], answer: "Sit down on the chair." },
+                { options: ["The sun is going down.", "Everyone was there down John.", "He works as a manager down the company."], answer: "The sun is going down." }
+            ]
+        },
+        {
+            word: "During",
+            notes: `<h3>1. Period (အတွင်း)</h3><p>အချိန်ကာလတစ်ခုအတွင်း။</p>`,
+            exercises: [
+                { options: ["She is married during a doctor.", "Don't sleep during the class.", "I agree during you completely."], answer: "Don't sleep during the class." },
+                { options: ["He is addicted during coffee.", "They congratulated her during success.", "It rained during the night."], answer: "It rained during the night." },
+                { options: ["She insists during paying the bill.", "The book belongs during me.", "Quiet during the exam."], answer: "Quiet during the exam." }
+            ]
+        },
+        {
+            word: "Except",
+            notes: `<h3>1. Exclusion (မှလွဲ၍)</h3><p>တစ်ခုကို ချန်လှပ်ထားခြင်း။</p>`,
+            exercises: [
+                { options: ["We complained except the noise.", "He died except a heart attack.", "Everyone went except me."], answer: "Everyone went except me." },
+                { options: ["I like all fruits except apple.", "She suffers except asthma.", "I am familiar except this software."], answer: "I like all fruits except apple." },
+                { options: ["He was accused except theft.", "Open daily except Sunday.", "She is capable except passing."], answer: "Open daily except Sunday." }
+            ]
+        },
+        {
+            word: "For",
+            notes: `<h3>1. Purpose (အတွက်)</h3><p>ရည်ရွယ်ချက် သို့မဟုတ် လက်ခံသူ။</p>`,
+            exercises: [
+                { options: ["I am proud for your achievements.", "The glass is full for water.", "This gift is for you."], answer: "This gift is for you." },
+                { options: ["Are you satisfied for the result?", "I am waiting for the bus.", "He is famous for his paintings."], answer: "I am waiting for the bus." },
+                { options: ["Cook dinner for us.", "She is responsible for the project.", "I apologize for the mistake."], answer: "Cook dinner for us." }
+            ]
+        },
+        {
+            word: "From",
+            notes: `<h3>1. Origin (မှ)</h3><p>စတင်ရာနေရာ သို့မဟုတ် အချိန်။</p>`,
+            exercises: [
+                { options: ["They objected from the new rules.", "I am from Myanmar.", "He prefers tea from coffee."], answer: "I am from Myanmar." },
+                { options: ["She prevented him from leaving.", "I succeeded from fixing the car.", "Take it from the table."], answer: "Take it from the table." },
+                { options: ["He believes from ghosts.", "She depends from public transport.", "A letter from my friend."], answer: "A letter from my friend." }
+            ]
+        },
+        {
+            word: "In",
+            notes: `<h3>1. Enclosed (ထဲတွင်)</h3><p>အတွင်းဘက်တွင်။</p>`,
+            exercises: [
+                { options: ["I am thinking in buying a car.", "The pen is in the bag.", "He stared in the painting."], answer: "The pen is in the bag." },
+                { options: ["She smiled in the child.", "They laughed in his joke.", "I live in Singapore."], answer: "I live in Singapore." },
+                { options: ["He shouted in me in anger.", "Born in July.", "She threw the ball in me."], answer: "Born in July." }
+            ]
+        },
+        {
+            word: "Inside",
+            notes: `<h3>1. Interior (အတွင်းဘက်)</h3><p>အထဲတွင် ရှိနေခြင်း။</p>`,
+            exercises: [
+                { options: ["I pointed inside the map.", "Go inside the house.", "He was amazed inside the view."], answer: "Go inside the house." },
+                { options: ["She is shocked inside the news.", "I am surprised inside his behavior.", "What is inside the box?"], answer: "What is inside the box?" },
+                { options: ["He is annoyed inside loud music.", "Stay inside during rain.", "She is angry inside her brother."], answer: "Stay inside during rain." }
+            ]
+        },
+        {
+            word: "Into",
+            notes: `<h3>1. Movement (ထဲသို့)</h3><p>အပြင်မှ အထဲသို့ ဝင်ခြင်း။</p>`,
+            exercises: [
+                { options: ["I am excited into the trip.", "Walk into the room.", "He is worried into his exams."], answer: "Walk into the room." },
+                { options: ["She is passionate into teaching.", "I feel sorry into him.", "Jump into the water."], answer: "Jump into the water." },
+                { options: ["He is jealous into her success.", "Put it into the trash.", "She is tired into working all day."], answer: "Put it into the trash." }
+            ]
+        },
+        {
+            word: "Of",
+            notes: `<h3>1. Possession (၏)</h3><p>ပိုင်ဆိုင်မှု သို့မဟုတ် အစိတ်အပိုင်း။</p>`,
+            exercises: [
+                { options: ["I am sick of this weather.", "The color of the car.", "He is fond of chocolate."], answer: "The color of the car." },
+                { options: ["She was absent of school.", "I am reading a book of history.", "A cup of tea."], answer: "A cup of tea." },
+                { options: ["It is of 5 o'clock now.", "The end of the story.", "Tell me of your trip."], answer: "The end of the story." }
+            ]
+        },
+        {
+            word: "Off",
+            notes: `<h3>1. Separation (ခွာခြင်း)</h3><p>မျက်နှာပြင်မှ ခွာထွက်ခြင်း။</p>`,
+            exercises: [
+                { options: ["The sun is off the clouds.", "Take off your shoes.", "His name is off mine on the list."], answer: "Take off your shoes." },
+                { options: ["The temperature is off zero.", "He ran off the bridge.", "Jump off the wall."], answer: "Jump off the wall." },
+                { options: ["The shop is off the street.", "Turn off the light.", "We walked off the river."], answer: "Turn off the light." }
+            ]
+        },
+        {
+            word: "On",
+            notes: `<h3>1. Surface (ပေါ်တွင်)</h3><p>မျက်နှာပြင်နှင့် ထိကပ်နေခြင်း။</p>`,
+            exercises: [
+                { options: ["Don't lean on the glass.", "The book is on the desk.", "He fought on the enemy."], answer: "The book is on the desk." },
+                { options: ["Put the ladder on the wall.", "We walked on the path.", "On Monday we work."], answer: "On Monday we work." },
+                { options: ["Trees grow on the road.", "Poster on the wall.", "The boat moved on the shore."], answer: "Poster on the wall." }
+            ]
+        },
+        {
+            word: "Out of",
+            notes: `<h3>1. Exit (ထဲမှ)</h3><p>အတွင်းမှ အပြင်သို့ ထွက်ခြင်း။</p>`,
+            exercises: [
+                { options: ["He is famous out of his friends.", "Get out of the car.", "Divide the cake out of the kids."], answer: "Get out of the car." },
+                { options: ["A house out of the trees.", "They sat out of the fire.", "Out of money now."], answer: "Out of money now." },
+                { options: ["The moon goes out of the earth.", "Ran out of the room.", "Walk out of the building."], answer: "Ran out of the room." }
+            ]
+        },
+        {
+            word: "Outside",
+            notes: `<h3>1. Exterior (အပြင်ဘက်)</h3><p>အပြင်ဘက်ခြမ်းတွင်။</p>`,
+            exercises: [
+                { options: ["I am outside the office.", "Wait outside the gate.", "Meet me outside 5 PM."], answer: "Wait outside the gate." },
+                { options: ["Play outside in park.", "Look outside the sky.", "The car is outside the house."], answer: "Play outside in park." },
+                { options: ["Don't hide outside the door.", "Noise outside my window.", "The sun went outside the clouds."], answer: "Noise outside my window." }
+            ]
+        },
+        {
+            word: "Over",
+            notes: `<h3>1. Crossing (အပေါ်မှ)</h3><p>ကျော်ဖြတ်ခြင်း သို့မဟုတ် ဖုံးအုပ်ခြင်း။</p>`,
+            exercises: [
+                { options: ["Sign your name over the line.", "Jump over the fence.", "The temperature is over zero."], answer: "Jump over the fence." },
+                { options: ["My shoes are over the table.", "Over 100 people.", "They found gold over the floor."], answer: "Over 100 people." },
+                { options: ["Sit over the tree shadow.", "Bridge over the river.", "The valley lies over the mountain."], answer: "Bridge over the river." }
+            ]
+        },
+        {
+            word: "Since",
+            notes: `<h3>1. Starting point (ကတည်းက)</h3><p>အတိတ်မှ စတင်ခဲ့သော အချိန်။</p>`,
+            exercises: [
+                { options: ["Sit since me.", "I have been here since 2 PM.", "The bank is since the hotel."], answer: "I have been here since 2 PM." },
+                { options: ["Who is standing since you?", "I sat since Tom and Jerry.", "Since 2010 I live here."], answer: "Since 2010 I live here." },
+                { options: ["The ball is since the boxes.", "Working since morning.", "Choose since blue and red."], answer: "Working since morning." }
+            ]
+        },
+        {
+            word: "Through",
+            notes: `<h3>1. Penetrating (ဖောက်၍)</h3><p>အတွင်းထဲမှ ဖြတ်သွားခြင်း။</p>`,
+            exercises: [
+                { options: ["The village is through the hill.", "Walk through the tunnel.", "The truth is through doubt."], answer: "Walk through the tunnel." },
+                { options: ["Look through the window.", "Look through the horizon.", "I live through the sea."], answer: "Look through the window." },
+                { options: ["Go to work through car.", "Drive through the forest.", "The letter was written through him."], answer: "Drive through the forest." }
+            ]
+        },
+        {
+            word: "To",
+            notes: `<h3>1. Destination (သို့)</h3><p>ဦးတည်ရာ ခရီးဆုံး။</p>`,
+            exercises: [
+                { options: ["Go down to stairs.", "Go to school.", "Sit down to the chair."], answer: "Go to school." },
+                { options: ["The sun is going to.", "Don't sleep to the class.", "Send it to me."], answer: "Send it to me." },
+                { options: ["It rained to the night.", "Welcome to Singapore.", "Quiet to the exam."], answer: "Welcome to Singapore." }
+            ]
+        },
+        {
+            word: "Toward",
+            notes: `<h3>1. Direction (ဘက်သို့)</h3><p>ရောက်ချင်မှရောက်မည်၊ ဦးတည်ရာ။</p>`,
+            exercises: [
+                { options: ["Everyone went toward me.", "Walk toward the exit.", "I like all fruits toward apple."], answer: "Walk toward the exit." },
+                { options: ["Open daily toward Sunday.", "This gift is toward you.", "Run toward me."], answer: "Run toward me." },
+                { options: ["I am waiting toward the bus.", "Heading toward the goal.", "Cook dinner toward us."], answer: "Heading toward the goal." }
+            ]
+        },
+        {
+            word: "Under",
+            notes: `<h3>1. Position (အောက်)</h3><p>အပေါ်မှ အုပ်မိုးခံထားရသော အောက်။</p>`,
+            exercises: [
+                { options: ["I am from under Myanmar.", "Cat under the chair.", "Take it under the table."], answer: "Cat under the chair." },
+                { options: ["A letter under my friend.", "The pen is under the bag.", "Stand under umbrella."], answer: "Stand under umbrella." },
+                { options: ["I live under Singapore.", "Hide under the bed.", "Born under July."], answer: "Hide under the bed." }
+            ]
+        },
+        {
+            word: "Until",
+            notes: `<h3>1. End point (အထိ)</h3><p>အချိန် တစ်ခုအထိ။</p>`,
+            exercises: [
+                { options: ["Go until the house.", "Wait until 9 PM.", "What is until the box?"], answer: "Wait until 9 PM." },
+                { options: ["Stay until during rain.", "Until Monday I wait.", "Walk until the room."], answer: "Until Monday I wait." },
+                { options: ["Jump until the water.", "Not open until May.", "Put it until the trash."], answer: "Not open until May." }
+            ]
+        },
+        {
+            word: "Up",
+            notes: `<h3>1. Ascending (အထက်သို့)</h3><p>အနိမ့်မှ အမြင့်သို့။</p>`,
+            exercises: [
+                { options: ["The color up the car.", "Go up the hill.", "A cup up tea."], answer: "Go up the hill." },
+                { options: ["The end up the story.", "Take up your shoes.", "Look up at sky."], answer: "Look up at sky." },
+                { options: ["Jump up the wall.", "Climb up the tree.", "Turn up the light."], answer: "Climb up the tree." }
+            ]
+        },
+        {
+            word: "With",
+            notes: `<h3>1. Accompaniment (နှင့်)</h3><p>အတူတကွ သို့မဟုတ် ကိရိယာ။</p>`,
+            exercises: [
+                { options: ["The book is with the desk.", "Go with him.", "With Monday we work."], answer: "Go with him." },
+                { options: ["Poster with the wall.", "Get with the car.", "Cut with knife."], answer: "Cut with knife." },
+                { options: ["Out with money now.", "Coffee with milk.", "Ran with the room."], answer: "Coffee with milk." }
+            ]
+        },
+        {
+            word: "Within",
+            notes: `<h3>1. Limits (အတွင်း)</h3><p>သတ်မှတ်ချက်ကို မကျော်လွန်သော အတွင်း။</p>`,
+            exercises: [
+                { options: ["Wait within the gate.", "Stay within the building.", "Play within in park."], answer: "Stay within the building." },
+                { options: ["Noise within my window.", "Jump within the fence.", "Finish within 1 hour."], answer: "Finish within 1 hour." },
+                { options: ["Over within people.", "Within reach.", "Bridge within the river."], answer: "Within reach." }
+            ]
+        },
+        {
+            word: "Without",
+            notes: `<h3>1. Absence (မပါဘဲ)</h3><p>မရှိဘဲ သို့မဟုတ် မပါဝင်ဘဲ။</p>`,
+            exercises: [
+                { options: ["I have been here without 2 PM.", "Tea without sugar.", "Without 2010 I live here."], answer: "Tea without sugar." },
+                { options: ["Working without morning.", "Walk without the tunnel.", "Left without goodbye."], answer: "Left without goodbye." },
+                { options: ["Look without the window.", "Can't live without water.", "Drive without the forest."], answer: "Can't live without water." }
+            ]
+        }
+    ];
+
+    // ==========================================
+    // DATA: 100 QUESTION TEST
+    // ==========================================
+    const testQuestions = [
+        { q: "The keys are ___ the table.", options: ["in", "on", "at"], answer: "on" },
+        { q: "I will see you ___ Monday.", options: ["in", "on", "at"], answer: "on" },
+        { q: "She has been living here ___ 2015.", options: ["for", "since", "from"], answer: "since" },
+        { q: "He is good ___ playing the guitar.", options: ["at", "in", "on"], answer: "at" },
+        { q: "Let's meet ___ the coffee shop.", options: ["in", "on", "at"], answer: "at" },
+        { q: "The cat hid ___ the bed.", options: ["under", "over", "above"], answer: "under" },
+        { q: "We walked ___ the park.", options: ["through", "between", "over"], answer: "through" },
+        { q: "She sat ___ him during the movie.", options: ["beside", "besides", "along"], answer: "beside" },
+        { q: "I have been waiting ___ three hours.", options: ["for", "since", "during"], answer: "for" },
+        { q: "He jumped ___ the pool.", options: ["into", "onto", "in"], answer: "into" },
+        { q: "The picture hangs ___ the fireplace.", options: ["above", "over", "on"], answer: "above" },
+        { q: "We are traveling ___ London tomorrow.", options: ["to", "at", "in"], answer: "to" },
+        { q: "They argued ___ politics.", options: ["about", "on", "for"], answer: "about" },
+        { q: "The book is written ___ Spanish.", options: ["in", "by", "with"], answer: "in" },
+        { q: "He arrived just ___ time for dinner.", options: ["in", "on", "at"], answer: "in" },
+        { q: "She relies ___ her parents for money.", options: ["on", "in", "to"], answer: "on" },
+        { q: "Are you interested ___ learning code?", options: ["in", "about", "for"], answer: "in" },
+        { q: "He is afraid ___ spiders.", options: ["of", "from", "by"], answer: "of" },
+        { q: "She apologized ___ being late.", options: ["for", "about", "to"], answer: "for" },
+        { q: "The train went ___ the tunnel.", options: ["through", "across", "over"], answer: "through" },
+        { q: "He parked his car ___ the building.", options: ["behind", "after", "back"], answer: "behind" },
+        { q: "The bird flew ___ the house.", options: ["over", "above", "on"], answer: "over" },
+        { q: "I am looking ___ my glasses.", options: ["for", "at", "to"], answer: "for" },
+        { q: "She was born ___ July.", options: ["in", "on", "at"], answer: "in" },
+        { q: "The store is open ___ 9 AM to 5 PM.", options: ["from", "since", "for"], answer: "from" },
+        { q: "He walked ___ the street.", options: ["across", "through", "between"], answer: "across" },
+        { q: "The keys slipped ___ the cracks.", options: ["between", "among", "in"], answer: "between" },
+        { q: "She distributed the candy ___ the children.", options: ["among", "between", "with"], answer: "among" },
+        { q: "We stayed indoors ___ the storm.", options: ["during", "while", "for"], answer: "during" },
+        { q: "He will finish the work ___ Friday.", options: ["by", "until", "to"], answer: "by" },
+        { q: "I can't wait ___ the weekend.", options: ["until", "for", "to"], answer: "until" },
+        { q: "They live ___ the street from us.", options: ["across", "opposite", "over"], answer: "across" },
+        { q: "She leaned ___ the wall.", options: ["against", "on", "at"], answer: "against" },
+        { q: "We walked ___ the river bank.", options: ["along", "through", "across"], answer: "along" },
+        { q: "There is a fence ___ the garden.", options: ["around", "about", "round"], answer: "around" },
+        { q: "The temperature is ___ zero.", options: ["below", "under", "beneath"], answer: "below" },
+        { q: "The treasure was buried ___ the sand.", options: ["beneath", "below", "underneath"], answer: "beneath" },
+        { q: "Look ___ the stars.", options: ["beyond", "above", "over"], answer: "beyond" },
+        { q: "This gift is ___ you.", options: ["for", "to", "from"], answer: "for" },
+        { q: "I received a letter ___ my friend.", options: ["from", "by", "of"], answer: "from" },
+        { q: "He is standing ___ front of the mirror.", options: ["in", "at", "on"], answer: "in" },
+        { q: "Put the box ___ the closet.", options: ["inside", "in", "into"], answer: "inside" },
+        { q: "The dog ran ___ the house.", options: ["out of", "outside", "from"], answer: "out of" },
+        { q: "They waited ___ the building.", options: ["outside", "out", "without"], answer: "outside" },
+        { q: "He climbed ___ the ladder.", options: ["up", "on", "over"], answer: "up" },
+        { q: "She fell ___ the stairs.", options: ["down", "off", "from"], answer: "down" },
+        { q: "Take your shoes ___.", options: ["off", "out", "away"], answer: "off" },
+        { q: "He threw the ball ___ me.", options: ["to", "at", "for"], answer: "to" },
+        { q: "Don't throw stones ___ the dog.", options: ["at", "to", "on"], answer: "at" },
+        { q: "We walked ___ the beach.", options: ["toward", "at", "for"], answer: "toward" },
+        { q: "She cut the paper ___ scissors.", options: ["with", "by", "using"], answer: "with" },
+        { q: "He went to the party ___ his friends.", options: ["without", "except", "but"], answer: "without" },
+        { q: "I will call you ___ an hour.", options: ["within", "in", "for"], answer: "within" },
+        { q: "Everyone was there ___ John.", options: ["except", "beside", "without"], answer: "except" },
+        { q: "He works as a manager ___ the company.", options: ["at", "in", "for"], answer: "at" },
+        { q: "She is married ___ a doctor.", options: ["to", "with", "by"], answer: "to" },
+        { q: "I agree ___ you completely.", options: ["with", "to", "on"], answer: "with" },
+        { q: "He is addicted ___ coffee.", options: ["to", "with", "on"], answer: "to" },
+        { q: "They congratulated her ___ her success.", options: ["on", "for", "about"], answer: "on" },
+        { q: "She insists ___ paying the bill.", options: ["on", "in", "for"], answer: "on" },
+        { q: "The book belongs ___ me.", options: ["to", "with", "for"], answer: "to" },
+        { q: "We complained ___ the noise.", options: ["about", "of", "for"], answer: "about" },
+        { q: "He died ___ a heart attack.", options: ["of", "from", "by"], answer: "of" },
+        { q: "She suffers ___ asthma.", options: ["from", "of", "with"], answer: "from" },
+        { q: "I am familiar ___ this software.", options: ["with", "to", "about"], answer: "with" },
+        { q: "He was accused ___ theft.", options: ["of", "for", "about"], answer: "of" },
+        { q: "She is capable ___ passing the test.", options: ["of", "for", "to"], answer: "of" },
+        { q: "I am proud ___ your achievements.", options: ["of", "for", "about"], answer: "of" },
+        { q: "The glass is full ___ water.", options: ["of", "with", "from"], answer: "of" },
+        { q: "Are you satisfied ___ the result?", options: ["with", "about", "for"], answer: "with" },
+        { q: "He is famous ___ his paintings.", options: ["for", "about", "of"], answer: "for" },
+        { q: "She is responsible ___ the project.", options: ["for", "of", "about"], answer: "for" },
+        { q: "I apologize ___ the mistake.", options: ["for", "about", "of"], answer: "for" },
+        { q: "They objected ___ the new rules.", options: ["to", "against", "on"], answer: "to" },
+        { q: "He prefers tea ___ coffee.", options: ["to", "over", "than"], answer: "to" },
+        { q: "She prevented him ___ leaving.", options: ["from", "to", "of"], answer: "from" },
+        { q: "I succeeded ___ fixing the car.", options: ["in", "at", "on"], answer: "in" },
+        { q: "He believes ___ ghosts.", options: ["in", "on", "about"], answer: "in" },
+        { q: "She depends ___ public transport.", options: ["on", "in", "to"], answer: "on" },
+        { q: "I am thinking ___ buying a car.", options: ["of", "on", "to"], answer: "of" },
+        { q: "He stared ___ the painting.", options: ["at", "on", "to"], answer: "at" },
+        { q: "She smiled ___ the child.", options: ["at", "to", "on"], answer: "at" },
+        { q: "They laughed ___ his joke.", options: ["at", "on", "about"], answer: "at" },
+        { q: "He shouted ___ me in anger.", options: ["at", "to", "on"], answer: "at" },
+        { q: "She threw the ball ___ me to catch.", options: ["to", "at", "for"], answer: "to" },
+        { q: "I pointed ___ the map.", options: ["at", "on", "to"], answer: "at" },
+        { q: "He was amazed ___ the view.", options: ["at", "by", "with"], answer: "at" },
+        { q: "She is shocked ___ the news.", options: ["by", "at", "with"], answer: "by" },
+        { q: "I am surprised ___ his behavior.", options: ["at", "by", "with"], answer: "at" },
+        { q: "He is annoyed ___ the loud music.", options: ["by", "with", "at"], answer: "by" },
+        { q: "She is angry ___ her brother.", options: ["with", "at", "about"], answer: "with" },
+        { q: "I am excited ___ the trip.", options: ["about", "for", "with"], answer: "about" },
+        { q: "He is worried ___ his exams.", options: ["about", "for", "of"], answer: "about" },
+        { q: "She is passionate ___ teaching.", options: ["about", "for", "in"], answer: "about" },
+        { q: "I feel sorry ___ him.", options: ["for", "about", "to"], answer: "for" },
+        { q: "He is jealous ___ her success.", options: ["of", "for", "about"], answer: "of" },
+        { q: "She is tired ___ working all day.", options: ["of", "from", "with"], answer: "of" },
+        { q: "I am sick ___ this weather.", options: ["of", "with", "from"], answer: "of" },
+        { q: "He is fond ___ chocolate.", options: ["of", "for", "with"], answer: "of" },
+        { q: "She was absent ___ school.", options: ["from", "of", "to"], answer: "from" }
+    ];
+
+    // ==========================================
+    // LOGIC & STATE
+    // ==========================================
+    
+    // View Navigation
+    function showView(viewId) {
+        document.getElementById('main-menu').classList.add('hidden');
+        document.getElementById('learn-list-view').classList.add('hidden');
+        document.getElementById('lesson-view').classList.add('hidden');
+        document.getElementById('test-view').classList.add('hidden');
+        
+        document.getElementById(viewId).classList.remove('hidden');
+    }
+
+    // Populate Learn Menu
+    const lessonButtonsContainer = document.getElementById('lesson-buttons-container');
+    lessonsData.forEach((lesson, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'lesson-list-btn';
+        btn.innerText = lesson.word;
+        btn.onclick = () => loadLesson(index);
+        lessonButtonsContainer.appendChild(btn);
+    });
+
+    // ==========================================
+    // LESSON EXERCISE LOGIC
+    // ==========================================
+    let currentLessonIndex = 0;
+    let currentExIndex = 0;
+
+    function loadLesson(index) {
+        currentLessonIndex = index;
+        const lesson = lessonsData[index];
+        document.getElementById('lesson-title').innerText = `Preposition: ${lesson.word}`;
+        document.getElementById('lesson-content').innerHTML = lesson.notes;
+        
+        showView('lesson-view');
+        currentExIndex = 0;
+        loadExercise();
+    }
+
+    function loadExercise() {
+        const exData = lessonsData[currentLessonIndex].exercises[currentExIndex];
+        document.getElementById('exercise-question-text').innerText = `Select the correct sentence (Exercise ${currentExIndex + 1} of 3):`;
+        
+        const optionsContainer = document.getElementById('exercise-options');
+        optionsContainer.innerHTML = '';
+        exData.options.forEach(opt => {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="radio" name="ex-option" value="${opt}"> ${opt}`;
+            optionsContainer.appendChild(label);
+        });
+
+        // Reset UI
+        document.getElementById('ex-confirm-btn').classList.remove('hidden');
+        document.getElementById('ex-result').classList.add('hidden');
+        document.getElementById('ex-show-ans-btn').classList.add('hidden');
+        document.getElementById('ex-next-btn').classList.add('hidden');
+        document.getElementById('ex-true-answer').classList.add('hidden');
+    }
+
+    function confirmExercise() {
+        const selected = document.querySelector('input[name="ex-option"]:checked');
+        if (!selected) { alert("Please select an option."); return; }
+
+        document.getElementById('ex-confirm-btn').classList.add('hidden');
+        const answer = selected.value;
+        const correctAnswer = lessonsData[currentLessonIndex].exercises[currentExIndex].answer;
+        const resultDiv = document.getElementById('ex-result');
+
+        resultDiv.classList.remove('hidden');
+        if (answer === correctAnswer) {
+            resultDiv.innerText = "Right!";
+            resultDiv.className = "result-display correct";
+        } else {
+            resultDiv.innerText = "Wrong!";
+            resultDiv.className = "result-display wrong";
+        }
+
+        document.getElementById('ex-show-ans-btn').classList.remove('hidden');
+        document.getElementById('ex-next-btn').classList.remove('hidden');
+        document.querySelectorAll('input[name="ex-option"]').forEach(input => input.disabled = true);
+    }
+
+    function showExerciseAnswer() {
+        const div = document.getElementById('ex-true-answer');
+        div.innerText = `Correct sentence: ${lessonsData[currentLessonIndex].exercises[currentExIndex].answer}`;
+        div.classList.remove('hidden');
+    }
+
+    function nextExercise() {
+        currentExIndex++;
+        if (currentExIndex < lessonsData[currentLessonIndex].exercises.length) {
+            loadExercise();
+        } else {
+            document.getElementById('exercise-question-text').innerText = "All exercises for this lesson completed!";
+            document.getElementById('exercise-options').innerHTML = '';
+            document.getElementById('ex-confirm-btn').classList.add('hidden');
+            document.getElementById('ex-result').classList.add('hidden');
+            document.getElementById('ex-show-ans-btn').classList.add('hidden');
+            document.getElementById('ex-next-btn').classList.add('hidden');
+            document.getElementById('ex-true-answer').classList.add('hidden');
+        }
+    }
+
+    // ==========================================
+    // 100 QUESTION TEST LOGIC
+    // ==========================================
+    let testIndex = 0;
+    let testScore = 0;
+
+    function startTest() {
+        showView('test-view');
+        testIndex = 0;
+        testScore = 0;
+        loadTestQuestion();
+    }
+
+    function loadTestQuestion() {
+        const qData = testQuestions[testIndex];
+        document.getElementById('test-progress').innerText = `Question ${testIndex + 1} of ${testQuestions.length}`;
+        document.getElementById('test-question-text').innerText = qData.q;
+        
+        const optionsContainer = document.getElementById('test-options');
+        optionsContainer.innerHTML = '';
+        qData.options.forEach(opt => {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="radio" name="test-option" value="${opt}"> ${opt}`;
+            optionsContainer.appendChild(label);
+        });
+
+        // Reset UI
+        document.getElementById('test-confirm-btn').classList.remove('hidden');
+        document.getElementById('test-result').classList.add('hidden');
+        document.getElementById('test-show-ans-btn').classList.add('hidden');
+        document.getElementById('test-next-btn').classList.add('hidden');
+        document.getElementById('test-true-answer').classList.add('hidden');
+    }
+
+    function confirmTest() {
+        const selected = document.querySelector('input[name="test-option"]:checked');
+        if (!selected) { alert("Please select an answer."); return; }
+
+        document.getElementById('test-confirm-btn').classList.add('hidden');
+        const answer = selected.value;
+        const correctAnswer = testQuestions[testIndex].answer;
+        const resultDiv = document.getElementById('test-result');
+
+        resultDiv.classList.remove('hidden');
+        if (answer === correctAnswer) {
+            resultDiv.innerText = "Right!";
+            resultDiv.className = "result-display correct";
+            testScore++;
+        } else {
+            resultDiv.innerText = "Wrong!";
+            resultDiv.className = "result-display wrong";
+        }
+
+        document.getElementById('test-show-ans-btn').classList.remove('hidden');
+        document.getElementById('test-next-btn').classList.remove('hidden');
+        document.querySelectorAll('input[name="test-option"]').forEach(input => input.disabled = true);
+    }
+
+    function showTestAnswer() {
+        const div = document.getElementById('test-true-answer');
+        div.innerText = `The correct answer is: ${testQuestions[testIndex].answer}`;
+        div.classList.remove('hidden');
+    }
+
+    function nextTestQuestion() {
+        testIndex++;
+        if (testIndex < testQuestions.length) {
+            loadTestQuestion();
+        } else {
+            document.getElementById('test-progress').innerText = "Completed";
+            document.getElementById('test-question-text').innerText = `Test Finished! Score: ${testScore} / ${testQuestions.length}`;
+            document.getElementById('test-options').innerHTML = '';
+            document.getElementById('test-confirm-btn').classList.add('hidden');
+            document.getElementById('test-result').classList.add('hidden');
+            document.getElementById('test-show-ans-btn').classList.add('hidden');
+            document.getElementById('test-next-btn').classList.add('hidden');
+            document.getElementById('test-true-answer').classList.add('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
+n').classList.add('hidden');
+            document.getElementById('test-next-btn').classList.add('hidden');
+            document.getElementById('test-true-answer').classList.add('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
+</body>
+</html>
