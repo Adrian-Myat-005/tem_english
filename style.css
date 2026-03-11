@@ -522,33 +522,66 @@ textarea {
 .friends-grid {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    padding-bottom: 20px;
 }
 
 .friend-row {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px;
+    gap: 12px;
+    padding: 12px;
     background: var(--button-bg);
     border: 1px solid var(--button-border);
     box-shadow: 0 4px 0 0 var(--button-shadow);
+    width: 100%;
 }
 
 .friend-photo {
-    width: 44px; height: 44px; border-radius: 50%;
+    width: 40px; height: 44px; border-radius: 50%;
     border: 1px solid var(--button-border);
     object-fit: cover;
+    flex-shrink: 0;
 }
 
-.friend-info { display: flex; flex-direction: column; flex-grow: 1; }
-.friend-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
-.friend-status { font-size: 0.6rem; color: #008800; font-weight: 700; letter-spacing: 0.05em; }
+.friend-info { 
+    display: flex; 
+    flex-direction: column; 
+    flex-grow: 1; 
+    min-width: 0; /* Prevents text overflow */
+}
+
+.friend-name { 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.friend-status { 
+    font-size: 0.55rem; 
+    color: #008800; 
+    font-weight: 700; 
+    letter-spacing: 0.05em; 
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.friend-status::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #00cc00;
+    border-radius: 50%;
+}
 
 .dm-btn {
-    padding: 10px 14px !important;
-    font-size: 0.6rem !important;
+    padding: 8px 12px !important;
+    font-size: 0.55rem !important;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* TOOLS LIST */
