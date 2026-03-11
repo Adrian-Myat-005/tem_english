@@ -202,7 +202,14 @@
         initLesson: (level) => {
             const pool = [];
             const titles = ["MIXED ALL", "2-DIGITS", "HUNDREDS", "THOUSANDS", "10-THOUSANDS", "100-THOUSANDS"];
-            while (pool.length < 100) {
+            
+            // Determine max possible unique numbers for the range
+            let maxRange = 1000; 
+            if (level === 1) maxRange = 85; // Safety cap for 2-digits (max is 90)
+            
+            let attempts = 0;
+            while (pool.length < Math.min(100, maxRange) && attempts < 500) {
+                attempts++;
                 let num;
                 switch(level) {
                     case 1: num = Math.floor(10 + Math.random() * 90); break;
