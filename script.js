@@ -81,6 +81,7 @@
         currentIndex: 0,
         score: 0,
         level: 0,
+        totalQuestions: 20, // INCREASED TO 20
         allDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
 
         start: () => {
@@ -135,9 +136,9 @@
             container.innerHTML = days.currentQuestion.options.map(opt => `
                 <button class="tactile-button" onclick="days.checkAnswer(this, '${opt}')">${opt}</button>
             `).join('');
-            const progress = ((days.currentIndex + 1) / 10) * 100;
+            const progress = ((days.currentIndex + 1) / days.totalQuestions) * 100;
             if (ui.get('days-progress-fill')) ui.get('days-progress-fill').style.width = `${progress}%`;
-            if (ui.get('days-progress-text')) ui.get('days-progress-text').textContent = `${days.currentIndex + 1} / 10`;
+            if (ui.get('days-progress-text')) ui.get('days-progress-text').textContent = `${days.currentIndex + 1} / ${days.totalQuestions}`;
         },
 
         speakQuestion: () => {
@@ -165,7 +166,7 @@
             }
             setTimeout(() => {
                 days.currentIndex++;
-                if (days.currentIndex < 10) days.nextQuestion();
+                if (days.currentIndex < days.totalQuestions) days.nextQuestion();
                 else days.showResult();
             }, 1200);
         },
@@ -173,8 +174,8 @@
         showResult: () => {
             ui.get('days-practice-area').style.display = 'none';
             ui.get('days-result-screen').style.display = 'block';
-            ui.get('days-final-score').textContent = `${days.score} / 10`;
-            let msg = days.score === 10 ? "PERFECT! You are a master of days." : (days.score >= 8 ? "Excellent! You've almost got it!" : "Keep practicing!");
+            ui.get('days-final-score').textContent = `${days.score} / ${days.totalQuestions}`;
+            let msg = days.score === days.totalQuestions ? "PERFECT! You are a master of days." : (days.score >= (days.totalQuestions * 0.8) ? "Excellent! You've almost got it!" : "Keep practicing!");
             ui.get('days-result-msg').textContent = msg;
         }
     };
@@ -203,24 +204,27 @@
             const pool = [];
             const titles = ["MIXED ALL", "2-DIGITS", "HUNDREDS", "THOUSANDS", "10-THOUSANDS", "100-THOUSANDS"];
             
-            // Determine max possible unique numbers for the range
-            let maxRange = 1000; 
-            if (level === 1) maxRange = 85; // Safety cap for 2-digits (max is 90)
+            // Simplified, robust pool generation to prevent hangs
+            const countToGenerate = (level === 1) ? 80 : 100; // 2-digits max is 90
             
-            let attempts = 0;
-            while (pool.length < Math.min(100, maxRange) && attempts < 500) {
-                attempts++;
+            for (let i = 0; i < countToGenerate; i++) {
                 let num;
-                switch(level) {
-                    case 1: num = Math.floor(10 + Math.random() * 90); break;
-                    case 2: num = Math.floor(100 + Math.random() * 900); break;
-                    case 3: num = Math.floor(1000 + Math.random() * 9000); break;
-                    case 4: num = Math.floor(10000 + Math.random() * 90000); break;
-                    case 5: num = Math.floor(100000 + Math.random() * 900000); break;
-                    default: num = Math.floor(10 + Math.random() * 999990); break;
-                }
-                if (!pool.includes(num)) pool.push(num);
+                let attempts = 0;
+                do {
+                    attempts++;
+                    switch(level) {
+                        case 1: num = Math.floor(10 + Math.random() * 90); break;
+                        case 2: num = Math.floor(100 + Math.random() * 900); break;
+                        case 3: num = Math.floor(1000 + Math.random() * 9000); break;
+                        case 4: num = Math.floor(10000 + Math.random() * 90000); break;
+                        case 5: num = Math.floor(100000 + Math.random() * 900000); break;
+                        default: num = Math.floor(10 + Math.random() * 999990); break;
+                    }
+                } while (pool.includes(num) && attempts < 10);
+                
+                pool.push(num);
             }
+
             numbers.currentLesson = pool.sort(() => 0.5 - Math.random()).slice(0, 20);
             numbers.currentIndex = 0; numbers.score = 0; numbers.isFlipped = false;
             ui.get('lesson-selection').style.display = 'none';
