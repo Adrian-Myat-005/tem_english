@@ -588,7 +588,16 @@
             prepositions.lessonIdx = idx;
             prepositions.exIdx = 0;
             const lesson = prepositions.lessons[idx];
+            
+            ui.get('prep-current-word').textContent = lesson.word.toUpperCase();
             ui.get('prep-lesson-content').innerHTML = lesson.notes;
+            
+            // Extract a pure example from notes (first blockquote)
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = lesson.notes;
+            const firstQuote = tempDiv.querySelector('blockquote');
+            ui.get('prep-pure-example').innerHTML = firstQuote ? firstQuote.innerHTML : "No example available.";
+            
             prepositions.showView('lesson');
             prepositions.loadExercise();
         },
