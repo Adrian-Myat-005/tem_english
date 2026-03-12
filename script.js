@@ -264,17 +264,257 @@
             { word: "For", notes: `<h3>1. Purpose</h3><p>ရည်ရွယ်ချက် သို့မဟုတ် လက်ခံသူ။</p>`, exercises: [ { options: ["I am proud for your achievements.", "The glass is full for water.", "This gift is for you."], answer: "This gift is for you." }, { options: ["Are you satisfied for the result?", "I am waiting for the bus.", "He is famous for his paintings."], answer: "I am waiting for the bus." }, { options: ["Cook dinner for us.", "She is responsible for the project.", "I apologize for the mistake."], answer: "Cook dinner for us." } ] },
             { word: "From", notes: `<h3>1. Origin</h3><p>စတင်ရာနေရာ သို့မဟုတ် အချိန်။</p>`, exercises: [ { options: ["They objected from the new rules.", "I am from Myanmar.", "He prefers tea from coffee."], answer: "I am from Myanmar." }, { options: ["She prevented him from leaving.", "I succeeded from fixing the car.", "Take it from the table."], answer: "Take it from the table." }, { options: ["He believes from ghosts.", "She depends from public transport.", "A letter from my friend."], answer: "A letter from my friend." } ] }
         ],
-        test: [
-            { q: "The keys are ___ the table.", options: ["in", "on", "at"], answer: "on" },
-            { q: "I will see you ___ Monday.", options: ["in", "on", "at"], answer: "on" },
-            { q: "She has been living here ___ 2015.", options: ["for", "since", "from"], answer: "since" },
-            { q: "He is good ___ playing the guitar.", options: ["at", "in", "on"], answer: "at" },
-            { q: "Let's meet ___ the coffee shop.", options: ["in", "on", "at"], answer: "at" },
-            { q: "The cat hid ___ the bed.", options: ["under", "over", "above"], answer: "under" },
-            { q: "We walked ___ the park.", options: ["through", "between", "over"], answer: "through" },
-            { q: "She sat ___ him during the movie.", options: ["beside", "besides", "along"], answer: "beside" },
-            { q: "I have been waiting ___ three hours.", options: ["for", "since", "during"], answer: "for" },
-            { q: "He jumped ___ the pool.", options: ["into", "onto", "in"], answer: "into" }
+        testLessons: [
+            {
+                "title": "Lesson 1: Place (In, On, At)",
+                "questions": [
+                    {"q": "The cat is sitting ___ the chair.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "I live ___ a small apartment.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "Meet me ___ the bus stop.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "There is a picture ___ the wall.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "He is waiting ___ the entrance.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "The keys are ___ the drawer.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "She is standing ___ the corner of the street.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "I left my phone ___ the table.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "They are swimming ___ the pool.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "My office is ___ the third floor.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "We stayed ___ a hotel last night.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "The books are ___ the shelf.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "There's a fly ___ my soup.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "He sat ___ the desk to work.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "I saw him ___ the party.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "The bird is ___ the cage.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "Put the vase ___ the mantelpiece.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "She works ___ the hospital.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "Is there any milk ___ the fridge?", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "I'll meet you ___ the airport.", "options": ["at", "in", "on"], "answer": "at"}
+                ]
+            },
+            {
+                "title": "Lesson 2: Time (At, On, In, During)",
+                "questions": [
+                    {"q": "I'll see you ___ 5 o'clock.", "options": ["at", "on", "in"], "answer": "at"},
+                    {"q": "My birthday is ___ July.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "We have a meeting ___ Monday.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "It's very cold ___ winter.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "I woke up ___ midnight.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "She usually works out ___ the morning.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "The store closes ___ 9 PM.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "We went on vacation ___ August.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "I'll be there ___ a few minutes.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "He fell asleep ___ the movie.", "options": ["during", "in", "on"], "answer": "during"},
+                    {"q": "They got married ___ June 12th.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "I like to read ___ the weekend.", "options": ["at", "on", "in"], "answer": "at"},
+                    {"q": "The concert starts ___ sunset.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "It rained heavily ___ the night.", "options": ["during", "on", "at"], "answer": "during"},
+                    {"q": "I have an appointment ___ Tuesday afternoon.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "We moved here ___ 2015.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "I'll finish this ___ an hour.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "She cried ___ the sad scene.", "options": ["during", "in", "at"], "answer": "during"},
+                    {"q": "The bank is closed ___ Sundays.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "I drink coffee ___ breakfast.", "options": ["at", "in", "on"], "answer": "at"}
+                ]
+            },
+            {
+                "title": "Lesson 3: Direction (To, Into, Onto)",
+                "questions": [
+                    {"q": "We are going ___ the park.", "options": ["to", "into", "onto"], "answer": "to"},
+                    {"q": "He jumped ___ the water.", "options": ["into", "onto", "to"], "answer": "into"},
+                    {"q": "Put the cat ___ the bed.", "options": ["onto", "into", "to"], "answer": "onto"},
+                    {"q": "She walked ___ the door.", "options": ["towards", "into", "onto"], "answer": "towards"},
+                    {"q": "I sent a letter ___ my friend.", "options": ["to", "into", "onto"], "answer": "to"},
+                    {"q": "Drive ___ the city center.", "options": ["towards", "into", "onto"], "answer": "towards"},
+                    {"q": "The car crashed ___ a tree.", "options": ["into", "onto", "to"], "answer": "into"},
+                    {"q": "Move the chair ___ the corner.", "options": ["to", "into", "onto"], "answer": "to"},
+                    {"q": "The bird flew ___ the branch.", "options": ["onto", "into", "to"], "answer": "onto"},
+                    {"q": "He ran ___ the finish line.", "options": ["towards", "into", "onto"], "answer": "towards"},
+                    {"q": "Welcome ___ our home.", "options": ["to", "into", "onto"], "answer": "to"},
+                    {"q": "Please step ___ the elevator.", "options": ["into", "onto", "to"], "answer": "into"},
+                    {"q": "The leaf fell ___ the ground.", "options": ["onto", "into", "to"], "answer": "onto"},
+                    {"q": "Look ___ the stars above.", "options": ["towards", "at", "into"], "answer": "towards"},
+                    {"q": "I'm going ___ school.", "options": ["to", "into", "onto"], "answer": "to"},
+                    {"q": "Dive ___ the deep end.", "options": ["into", "onto", "to"], "answer": "into"},
+                    {"q": "Climb ___ the roof.", "options": ["onto", "into", "to"], "answer": "onto"},
+                    {"q": "They are heading ___ the mountains.", "options": ["towards", "into", "onto"], "answer": "towards"},
+                    {"q": "Give the book ___ me.", "options": ["to", "into", "onto"], "answer": "to"},
+                    {"q": "Pour the milk ___ the glass.", "options": ["into", "onto", "to"], "answer": "into"}
+                ]
+            },
+            {
+                "title": "Lesson 4: Manner (By, With)",
+                "questions": [
+                    {"q": "This book was written ___ Charles Dickens.", "options": ["by", "with", "from"], "answer": "by"},
+                    {"q": "Cut the bread ___ a knife.", "options": ["with", "by", "for"], "answer": "with"},
+                    {"q": "I go to work ___ bus.", "options": ["by", "with", "in"], "answer": "by"},
+                    {"q": "She is staying ___ her parents.", "options": ["with", "by", "at"], "answer": "with"},
+                    {"q": "The house was destroyed ___ fire.", "options": ["by", "with", "from"], "answer": "by"},
+                    {"q": "Clean the window ___ a cloth.", "options": ["with", "by", "for"], "answer": "with"},
+                    {"q": "I'll be there ___ 10 o'clock.", "options": ["by", "with", "at"], "answer": "by"},
+                    {"q": "He fought the dragon ___ a sword.", "options": ["with", "by", "for"], "answer": "with"},
+                    {"q": "This cake was made ___ my sister.", "options": ["by", "with", "for"], "answer": "by"},
+                    {"q": "I am bored ___ this game.", "options": ["with", "by", "for"], "answer": "with"},
+                    {"q": "They traveled ___ train.", "options": ["by", "with", "on"], "answer": "by"},
+                    {"q": "Open the door ___ this key.", "options": ["with", "by", "in"], "answer": "with"},
+                    {"q": "I'll finish this project ___ Friday.", "options": ["by", "with", "at"], "answer": "by"},
+                    {"q": "She is happy ___ her new job.", "options": ["with", "by", "about"], "answer": "with"},
+                    {"q": "The letter was sent ___ airmail.", "options": ["by", "with", "on"], "answer": "by"},
+                    {"q": "Stir the soup ___ a spoon.", "options": ["with", "by", "in"], "answer": "with"},
+                    {"q": "Stand ___ me.", "options": ["by", "with", "at"], "answer": "by"},
+                    {"q": "I agree ___ you.", "options": ["with", "by", "to"], "answer": "with"},
+                    {"q": "We learn ___ doing.", "options": ["by", "with", "for"], "answer": "by"},
+                    {"q": "He is gifted ___ a great voice.", "options": ["with", "by", "of"], "answer": "with"}
+                ]
+            },
+            {
+                "title": "Lesson 5: Purpose (For, From)",
+                "questions": [
+                    {"q": "This gift is ___ you.", "options": ["for", "from", "of"], "answer": "for"},
+                    {"q": "I am ___ New York.", "options": ["from", "for", "at"], "answer": "from"},
+                    {"q": "We stayed home ___ the rain.", "options": ["because of", "for", "from"], "answer": "because of"},
+                    {"q": "I've been waiting ___ an hour.", "options": ["for", "from", "since"], "answer": "for"},
+                    {"q": "Take a cookie ___ the jar.", "options": ["from", "for", "off"], "answer": "from"},
+                    {"q": "He was late ___ the traffic.", "options": ["because of", "for", "from"], "answer": "because of"},
+                    {"q": "This tool is used ___ digging.", "options": ["for", "from", "with"], "answer": "for"},
+                    {"q": "I received a letter ___ my aunt.", "options": ["from", "for", "by"], "answer": "from"},
+                    {"q": "She won the prize ___ her hard work.", "options": ["for", "because of", "from"], "answer": "for"},
+                    {"q": "I can't see ___ the fog.", "options": ["because of", "for", "from"], "answer": "because of"},
+                    {"q": "I am looking ___ my keys.", "options": ["for", "from", "at"], "answer": "for"},
+                    {"q": "The wind blows ___ the north.", "options": ["from", "for", "off"], "answer": "from"},
+                    {"q": "We are sorry ___ the delay.", "options": ["for", "from", "about"], "answer": "for"},
+                    {"q": "He is tired ___ the journey.", "options": ["from", "for", "because of"], "answer": "from"},
+                    {"q": "I did it ___ you.", "options": ["for", "from", "because of"], "answer": "for"},
+                    {"q": "The water comes ___ the tap.", "options": ["from", "for", "out"], "answer": "from"},
+                    {"q": "The match was cancelled ___ snow.", "options": ["because of", "for", "from"], "answer": "because of"},
+                    {"q": "I have a message ___ John.", "options": ["for", "from", "about"], "answer": "for"},
+                    {"q": "She is suffering ___ a cold.", "options": ["from", "for", "with"], "answer": "from"},
+                    {"q": "I bought this shirt ___ $20.", "options": ["for", "from", "with"], "answer": "for"}
+                ]
+            },
+            {
+                "title": "Lesson 6: Relation (About, With, Of)",
+                "questions": [
+                    {"q": "Tell me ___ your trip.", "options": ["about", "with", "of"], "answer": "about"},
+                    {"q": "I am thinking ___ you.", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "She is covered ___ mud.", "options": ["with", "about", "of"], "answer": "with"},
+                    {"q": "What is the name ___ this song?", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "I'm worried ___ the exam.", "options": ["about", "of", "with"], "answer": "about"},
+                    {"q": "Fill the glass ___ water.", "options": ["with", "of", "about"], "answer": "with"},
+                    {"q": "He is a friend ___ mine.", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "We talked ___ the weather.", "options": ["about", "with", "of"], "answer": "about"},
+                    {"q": "I am proud ___ my son.", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "He is angry ___ me.", "options": ["with", "about", "of"], "answer": "with"},
+                    {"q": "It's a story ___ a king.", "options": ["about", "of", "with"], "answer": "about"},
+                    {"q": "The table is made ___ wood.", "options": ["of", "with", "from"], "answer": "of"},
+                    {"q": "I am familiar ___ this place.", "options": ["with", "about", "of"], "answer": "with"},
+                    {"q": "There is a lot ___ noise.", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "I am sure ___ it.", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "She is obsessed ___ cats.", "options": ["with", "about", "of"], "answer": "with"},
+                    {"q": "Don't forget ___ the meeting.", "options": ["about", "of", "with"], "answer": "about"},
+                    {"q": "He is the captain ___ the team.", "options": ["of", "about", "with"], "answer": "of"},
+                    {"q": "I am satisfied ___ the results.", "options": ["with", "of", "about"], "answer": "with"},
+                    {"q": "I have a dream ___ flying.", "options": ["of", "about", "with"], "answer": "of"}
+                ]
+            },
+            {
+                "title": "Lesson 7: Position (Between, Among)",
+                "questions": [
+                    {"q": "I am sitting ___ my two friends.", "options": ["between", "among", "beside"], "answer": "between"},
+                    {"q": "He is popular ___ his classmates.", "options": ["among", "between", "beside"], "answer": "among"},
+                    {"q": "Come and sit ___ me.", "options": ["beside", "among", "between"], "answer": "beside"},
+                    {"q": "The pharmacy is ___ the bank.", "options": ["next to", "among", "between"], "answer": "next to"},
+                    {"q": "There is a secret ___ us.", "options": ["between", "among", "beside"], "answer": "between"},
+                    {"q": "I found my keys ___ the papers.", "options": ["among", "between", "beside"], "answer": "among"},
+                    {"q": "She stood ___ the window.", "options": ["beside", "among", "between"], "answer": "beside"},
+                    {"q": "My house is ___ yours.", "options": ["next to", "among", "between"], "answer": "next to"},
+                    {"q": "The ball fell ___ the two cars.", "options": ["between", "among", "beside"], "answer": "between"},
+                    {"q": "He was hidden ___ the trees.", "options": ["among", "between", "beside"], "answer": "among"},
+                    {"q": "Put the lamp ___ the bed.", "options": ["beside", "among", "between"], "answer": "beside"},
+                    {"q": "The school is ___ the park.", "options": ["next to", "among", "between"], "answer": "next to"},
+                    {"q": "Choose ___ these three options.", "options": ["among", "between", "beside"], "answer": "among"},
+                    {"q": "The coffee shop is ___ the library.", "options": ["next to", "among", "between"], "answer": "next to"},
+                    {"q": "A river flows ___ the two mountains.", "options": ["between", "among", "beside"], "answer": "between"},
+                    {"q": "There is a thief ___ us.", "options": ["among", "between", "beside"], "answer": "among"},
+                    {"q": "I parked my car ___ the garage.", "options": ["beside", "among", "between"], "answer": "beside"},
+                    {"q": "The remote is ___ the sofa.", "options": ["next to", "among", "between"], "answer": "next to"},
+                    {"q": "The difference ___ the two is small.", "options": ["between", "among", "beside"], "answer": "between"},
+                    {"q": "She felt lonely ___ the crowd.", "options": ["among", "between", "beside"], "answer": "among"}
+                ]
+            },
+            {
+                "title": "Lesson 8: Movement (Through, Across)",
+                "questions": [
+                    {"q": "We walked ___ the forest.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "He swam ___ the river.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "They strolled ___ the beach.", "options": ["along", "through", "across"], "answer": "along"},
+                    {"q": "The bullet went ___ the wall.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "We drove ___ the bridge.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "Follow the path ___ the river.", "options": ["along", "through", "across"], "answer": "along"},
+                    {"q": "I looked ___ the window.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "She ran ___ the street.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "Flowers grow ___ the fence.", "options": ["along", "through", "across"], "answer": "along"},
+                    {"q": "The water flows ___ the pipe.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "They sailed ___ the ocean.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "Walk ___ the corridor.", "options": ["along", "through", "across"], "answer": "along"},
+                    {"q": "I can see ___ the glass.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "He lives ___ the road.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "We cycled ___ the canal.", "options": ["along", "through", "across"], "answer": "along"},
+                    {"q": "The light shines ___ the curtains.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "He stepped ___ the line.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "Trees are planted ___ the road.", "options": ["along", "through", "across"], "answer": "along"},
+                    {"q": "The thread passes ___ the needle.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "We flew ___ the clouds.", "options": ["through", "across", "along"], "answer": "through"}
+                ]
+            },
+            {
+                "title": "Lesson 9: Idioms & Collocations",
+                "questions": [
+                    {"q": "I am ___ a hurry.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "We are ___ strike.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "He is good ___ math.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "I believe ___ ghosts.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "She is ___ diet.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "Don't be late ___ school.", "options": ["for", "to", "at"], "answer": "for"},
+                    {"q": "I'm afraid ___ spiders.", "options": ["of", "from", "with"], "answer": "of"},
+                    {"q": "Pay ___ cash.", "options": ["in", "with", "by"], "answer": "in"},
+                    {"q": "It depends ___ the weather.", "options": ["on", "of", "in"], "answer": "on"},
+                    {"q": "I'm interested ___ art.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "She is married ___ a doctor.", "options": ["to", "with", "by"], "answer": "to"},
+                    {"q": "Listen ___ the music.", "options": ["to", "at", "in"], "answer": "to"},
+                    {"q": "I'm looking forward ___ the party.", "options": ["to", "for", "at"], "answer": "to"},
+                    {"q": "He died ___ old age.", "options": ["of", "from", "by"], "answer": "of"},
+                    {"q": "I'm sorry ___ being late.", "options": ["for", "about", "with"], "answer": "for"},
+                    {"q": "They arrived ___ the station.", "options": ["at", "in", "to"], "answer": "at"},
+                    {"q": "Congratulations ___ your success.", "options": ["on", "for", "with"], "answer": "on"},
+                    {"q": "I'm tired ___ waiting.", "options": ["of", "from", "with"], "answer": "of"},
+                    {"q": "She is famous ___ her singing.", "options": ["for", "with", "of"], "answer": "for"},
+                    {"q": "Wait ___ me!", "options": ["for", "to", "at"], "answer": "for"}
+                ]
+            },
+            {
+                "title": "Lesson 10: Mixed Challenge",
+                "questions": [
+                    {"q": "The keys are ___ the table.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "I'll meet you ___ noon.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "He walked ___ the room.", "options": ["into", "to", "onto"], "answer": "into"},
+                    {"q": "This is a gift ___ her.", "options": ["for", "from", "with"], "answer": "for"},
+                    {"q": "I am proud ___ you.", "options": ["of", "with", "about"], "answer": "of"},
+                    {"q": "We went ___ the tunnel.", "options": ["through", "across", "along"], "answer": "through"},
+                    {"q": "She is ___ work right now.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "I live ___ London.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "The book is ___ the shelf.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "I'll be there ___ Monday.", "options": ["on", "in", "at"], "answer": "on"},
+                    {"q": "He jumped ___ the pool.", "options": ["into", "onto", "to"], "answer": "into"},
+                    {"q": "I'm afraid ___ heights.", "options": ["of", "from", "with"], "answer": "of"},
+                    {"q": "She is looking ___ her lost dog.", "options": ["for", "at", "to"], "answer": "for"},
+                    {"q": "The bridge goes ___ the river.", "options": ["across", "through", "along"], "answer": "across"},
+                    {"q": "I am interested ___ history.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "Meet me ___ the corner.", "options": ["at", "in", "on"], "answer": "at"},
+                    {"q": "I'll finish ___ ten minutes.", "options": ["in", "on", "at"], "answer": "in"},
+                    {"q": "This was made ___ hand.", "options": ["by", "with", "from"], "answer": "by"},
+                    {"q": "I agree ___ your opinion.", "options": ["with", "to", "for"], "answer": "with"},
+                    {"q": "Tell me ___ your day.", "options": ["about", "of", "with"], "answer": "about"}
+                ]
+            }
         ],
         
         currentView: 'main',
@@ -282,6 +522,8 @@
         exIdx: 0,
         testIdx: 0,
         testScore: 0,
+        currentTestIdx: 0,
+        currentTestQuestions: [],
 
         start: () => {
             ui.get('prepositions-section').style.display = 'flex';
@@ -289,29 +531,38 @@
         },
 
         back: () => {
-            if (prepositions.currentView === 'main') {
-                ui.get('prepositions-section').style.display = 'none';
-            } else if (prepositions.currentView === 'lesson' || prepositions.currentView === 'learn-list' || prepositions.currentView === 'test' || prepositions.currentView === 'result') {
-                prepositions.showView('main');
-            }
+            const v = prepositions.currentView;
+            if (v === 'main') ui.get('prepositions-section').style.display = 'none';
+            else if (v === 'learn-list' || v === 'test-menu') prepositions.showView('main');
+            else if (v === 'lesson') prepositions.showView('learn-list');
+            else if (v === 'test' || v === 'result') prepositions.showView('test-menu');
         },
 
         showView: (view) => {
             prepositions.currentView = view;
-            const views = ['main-menu', 'learn-list', 'lesson-view', 'test-view', 'result-view'];
+            const views = ['main-menu', 'learn-list', 'test-menu', 'lesson-view', 'test-view', 'result-view'];
             views.forEach(v => ui.get(`prep-${v}`).style.display = 'none');
-            ui.get(`prep-${view === 'main' ? 'main-menu' : view}`).style.display = view === 'main' ? 'grid' : 'block';
             
-            ui.get('prep-title').textContent = view === 'main' ? 'PREPOSITIONS' : view.toUpperCase().replace('-', ' ');
+            const targetId = view === 'main' ? 'main-menu' : (view === 'lesson' ? 'lesson-view' : (view === 'test' ? 'test-view' : (view === 'result' ? 'result-view' : view)));
+            const displayMode = (targetId === 'main-menu' || targetId === 'learn-list' || targetId === 'test-menu') ? 'grid' : 'block';
+            ui.get(`prep-${targetId}`).style.display = displayMode;
+            
+            const titles = { 'main': 'PREPOSITIONS', 'learn-list': 'LEARN LIST', 'test-menu': 'TEST LESSONS', 'lesson': 'LEARN', 'test': 'PRACTICE', 'result': 'COMPLETE' };
+            ui.get('prep-title').textContent = titles[view] || 'PREPOSITIONS';
             ui.get('prep-back-btn').textContent = view === 'main' ? '← BACK' : '← MENU';
         },
 
         showLearnList: () => {
             prepositions.showView('learn-list');
             const container = ui.get('prep-list-container');
-            container.innerHTML = prepositions.lessons.map((l, i) => `
-                <button class="tactile-button" onclick="prepositions.loadLesson(${i})">${l.word}</button>
-            `).join('');
+            const progress = JSON.parse(localStorage.getItem('prep_learn_progress') || '{}');
+            
+            container.innerHTML = prepositions.lessons.map((l, i) => {
+                const isDone = progress[i];
+                return `<button class="tactile-button ${isDone ? 'option-correct' : ''}" onclick="prepositions.loadLesson(${i})">
+                    ${l.word} ${isDone ? '✓' : ''}
+                </button>`;
+            }).join('');
         },
 
         loadLesson: (idx) => {
@@ -319,7 +570,7 @@
             prepositions.exIdx = 0;
             const lesson = prepositions.lessons[idx];
             ui.get('prep-lesson-content').innerHTML = lesson.notes;
-            prepositions.showView('lesson-view');
+            prepositions.showView('lesson');
             prepositions.loadExercise();
         },
 
@@ -333,6 +584,7 @@
             ui.get('prep-ex-confirm').style.display = 'inline-flex';
             ui.get('prep-ex-next').style.display = 'none';
             container.classList.remove('locked');
+            prepositions.selectedEx = null;
         },
 
         handleExClick: (btn, choice) => {
@@ -361,21 +613,42 @@
         nextExercise: () => {
             prepositions.exIdx++;
             prepositions.selectedEx = null;
-            if (prepositions.exIdx < 3) prepositions.loadExercise();
-            else prepositions.showView('learn-list');
+            if (prepositions.exIdx < 3) {
+                prepositions.loadExercise();
+            } else {
+                const progress = JSON.parse(localStorage.getItem('prep_learn_progress') || '{}');
+                progress[prepositions.lessonIdx] = true;
+                localStorage.setItem('prep_learn_progress', JSON.stringify(progress));
+                prepositions.showLearnList();
+            }
         },
 
-        startTest: () => {
+        showTestMenu: () => {
+            prepositions.showView('test-menu');
+            const container = ui.get('prep-test-list');
+            const progress = JSON.parse(localStorage.getItem('prep_test_progress') || '{}');
+            
+            container.innerHTML = prepositions.testLessons.map((l, i) => {
+                const isDone = progress[i];
+                return `<button class="tactile-button ${isDone ? 'option-correct' : ''}" onclick="prepositions.startTest(${i})">
+                    ${l.title} ${isDone ? '✓' : ''}
+                </button>`;
+            }).join('');
+        },
+
+        startTest: (idx) => {
+            prepositions.currentTestIdx = idx;
             prepositions.testIdx = 0;
             prepositions.testScore = 0;
-            prepositions.showView('test-view');
+            prepositions.currentTestQuestions = [...prepositions.testLessons[idx].questions].sort(() => 0.5 - Math.random());
+            prepositions.showView('test');
             prepositions.loadTestQuestion();
         },
 
         loadTestQuestion: () => {
-            const q = prepositions.test[prepositions.testIdx];
-            ui.get('prep-test-progress').textContent = `${prepositions.testIdx + 1} / ${prepositions.test.length}`;
-            ui.get('prep-test-fill').style.width = `${((prepositions.testIdx + 1) / prepositions.test.length) * 100}%`;
+            const q = prepositions.currentTestQuestions[prepositions.testIdx];
+            ui.get('prep-test-progress').textContent = `${prepositions.testIdx + 1} / 20`;
+            ui.get('prep-test-fill').style.width = `${((prepositions.testIdx + 1) / 20) * 100}%`;
             ui.get('prep-test-question').textContent = q.q;
             
             const container = ui.get('prep-test-options');
@@ -401,7 +674,7 @@
             if (!prepositions.selectedTest) return;
             const container = ui.get('prep-test-options');
             container.classList.add('locked');
-            const correct = prepositions.test[prepositions.testIdx].answer;
+            const correct = prepositions.currentTestQuestions[prepositions.testIdx].answer;
             
             if (prepositions.selectedTest === correct) {
                 prepositions.testScore++;
@@ -418,17 +691,22 @@
 
         nextTest: () => {
             prepositions.testIdx++;
-            if (prepositions.testIdx < prepositions.test.length) {
+            if (prepositions.testIdx < 20) {
                 prepositions.loadTestQuestion();
             } else {
+                if (prepositions.testScore >= 16) {
+                    const progress = JSON.parse(localStorage.getItem('prep_test_progress') || '{}');
+                    progress[prepositions.currentTestIdx] = true;
+                    localStorage.setItem('prep_test_progress', JSON.stringify(progress));
+                }
                 prepositions.showResult();
             }
         },
 
         showResult: () => {
             prepositions.showView('result');
-            ui.get('prep-final-score').textContent = `${prepositions.testScore} / ${prepositions.test.length}`;
-            ui.get('prep-result-msg').textContent = prepositions.testScore === prepositions.test.length ? "PERFECT! You're a preposition master." : "Great effort! Keep practicing.";
+            ui.get('prep-final-score').textContent = `${prepositions.testScore} / 20`;
+            ui.get('prep-result-msg').textContent = prepositions.testScore >= 16 ? "EXCELLENT! You've mastered this lesson." : "Good effort! Try to get at least 16 to mark it as done.";
         }
     };
 
