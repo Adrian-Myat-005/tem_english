@@ -433,40 +433,144 @@
     };
 
     const sentences = {
-        pool: [
-            "I am a student.",
-            "She is a doctor.",
-            "They are playing football.",
-            "We like to learn English.",
-            "The cat is under the table.",
-            "He goes to school every day.",
-            "I have a red pen.",
-            "It is a beautiful day.",
-            "My mother is cooking dinner.",
-            "You are my best friend."
-        ],
+        data: {
+            basic: [
+                {
+                    title: "Lesson 1: To Be (Present)",
+                    sentences: ["I am a student", "You are my friend", "He is a doctor", "She is very tall", "It is a big cat", "We are in school", "They are very happy", "I am a teacher", "You are very kind", "He is at home", "She is a nurse", "It is a blue car", "We are fast runners", "They are good kids", "I am hungry now", "You are a singer", "He is my brother", "She is my sister", "It is a sunny day", "We are best friends"]
+                },
+                {
+                    title: "Lesson 2: Simple Actions",
+                    sentences: ["I walk to school", "She drinks cold water", "He eats a red apple", "They play in the park", "We read a big book", "The bird sings a song", "I jump very high", "You run to the door", "He sleeps in the bed", "She writes a long letter", "They swim in the pool", "We sit on the grass", "I see a small mouse", "You hear a loud noise", "He kicks the soccer ball", "She draws a pretty flower", "They cook a nice meal", "We clean the house", "I open the window", "The dog barks at me"]
+                },
+                {
+                    title: "Lesson 3: My Family",
+                    sentences: ["This is my mother", "That is my father", "I love my grandmother", "My grandfather is old", "I have one brother", "She has two sisters", "My baby is cute", "This is my family", "My aunt is nice", "My uncle is tall", "We visit our cousin", "My parents are kind", "I help my mother", "He plays with his brother", "She talks to her sister", "They live with their parents", "This is my home", "We eat dinner together", "My family is small", "I love my home"]
+                },
+                {
+                    title: "Lesson 4: At Home",
+                    sentences: ["The chair is brown", "The table is big", "I have a soft bed", "The lamp is bright", "The door is open", "The window is closed", "My room is clean", "The kitchen is small", "I sit on the sofa", "The TV is loud", "I see the mirror", "The floor is cold", "Put it in the box", "The wall is white", "Use the blue plate", "Drink from the glass", "Wash your dirty hands", "Look at the clock", "The rug is soft", "Close the heavy door"]
+                },
+                {
+                    title: "Lesson 5: Colors and Shapes",
+                    sentences: ["The sky is blue", "The grass is green", "The sun is yellow", "This apple is red", "I see a white cloud", "The cat is black", "The ball is orange", "I like the purple flower", "Draw a big circle", "This is a square box", "The star is bright", "Look at the triangle", "My shirt is pink", "The car is gray", "I have a brown hat", "The paper is white", "Color the heart red", "The moon is round", "This is a long line", "I like all colors"]
+                }
+            ],
+            negation: [
+                {
+                    title: "Lesson 1: Not with Be",
+                    sentences: ["I am not sad", "You are not late", "He is not hungry", "She is not a doctor", "It is not cold today", "We are not tired", "They are not at home", "I am not a teacher", "You are not my brother", "He is not very old", "She is not my sister", "It is not a dog", "We are not in school", "They are not happy", "I am not angry", "You are not a singer", "He is not tall", "She is not busy", "It is not yellow", "We are not lost"]
+                },
+                {
+                    title: "Lesson 2: Don't with Verbs",
+                    sentences: ["I do not like milk", "You do not run fast", "They do not eat meat", "We do not go there", "I do not play games", "You do not hear me", "They do not want tea", "We do not see it", "I do not need help", "You do not know him", "They do not walk far", "We do not drink juice", "I do not sleep late", "You do not write well", "They do not sing loud", "We do not dance often", "I do not swim well", "You do not cook dinner", "They do not read books", "We do not work here"]
+                },
+                {
+                    title: "Lesson 3: Doesn't with Verbs",
+                    sentences: ["He does not like fish", "She does not play piano", "It does not rain here", "He does not go home", "She does not want candy", "It does not look good", "He does not hear you", "She does not see me", "It does not bark much", "He does not work hard", "She does not study math", "It does not cost much", "He does not drive fast", "She does not wear hats", "It does not taste sweet", "He does not feel well", "She does not need money", "It does not move fast", "He does not speak loud", "She does not live here"]
+                },
+                {
+                    title: "Lesson 4: Cannot/Can't",
+                    sentences: ["I cannot fly a plane", "You cannot touch the sky", "He cannot swim across", "She cannot speak Spanish", "It cannot climb trees", "We cannot see the wind", "They cannot come today", "I cannot lift this box", "You cannot go inside", "He cannot find his keys", "She cannot cook a meal", "It cannot run away", "We cannot hear the music", "They cannot wait long", "I cannot read that sign", "You cannot buy this car", "He cannot play guitar", "She cannot ride a bike", "It cannot jump high", "We cannot stay here"]
+                },
+                {
+                    title: "Lesson 5: No and Never",
+                    sentences: ["I have no money", "He has no friends", "She has no time", "There is no milk left", "I never eat breakfast", "He never goes to bed", "She never wears a coat", "They never play soccer", "I see no birds here", "He says no words", "She has no blue pen", "There are no books here", "I never drink coffee", "He never swims in winter", "She never speaks to me", "They never visit us", "I have no more bread", "He has no red car", "She has no big house", "I never walk to work"]
+                }
+            ],
+            questions: [
+                {
+                    title: "Lesson 1: Yes/No with Be",
+                    sentences: ["Are you happy", "Is he a doctor", "Is she your friend", "Is it cold outside", "Are we late", "Are they at home", "Am I a good student", "Are you hungry", "Is he your brother", "Is she a nurse", "Is it a big cat", "Are we in the park", "Are they busy now", "Is it a sunny day", "Are you ready", "Is he a teacher", "Is she very tall", "Are they tired", "Is it a blue car", "Are we best friends"]
+                },
+                {
+                    title: "Lesson 2: Yes/No with Do",
+                    sentences: ["Do you like apples", "Does he play soccer", "Does she speak English", "Do they live here", "Do we have time", "Does it rain often", "Do you want water", "Does he drive a car", "Does she sing well", "Do they know you", "Do you hear that", "Does he need help", "Does she have a cat", "Do they work hard", "Do you see the bird", "Does he go to school", "Does she cook dinner", "Do they read books", "Do you sleep early", "Does it taste good"]
+                },
+                {
+                    title: "Lesson 3: What Questions",
+                    sentences: ["What is your name", "What is this color", "What do you see", "What does he want", "What is in the box", "What is the time", "What do they eat", "What does she like", "What color is the sky", "What is that noise", "What do you need", "What does he say", "What are they doing", "What is your favorite food", "What do we do now", "What is in your bag", "What does she have", "What is the date", "What do you hear", "What is this book about"]
+                },
+                {
+                    title: "Lesson 4: Where Questions",
+                    sentences: ["Where is my pen", "Where do you live", "Where is the cat", "Where does he go", "Where are my shoes", "Where is the bathroom", "Where do they play", "Where does she work", "Where is the park", "Where are the keys", "Where do we go now", "Where is your school", "Where does he live", "Where is the milk", "Where are they from", "Where is the nearest shop", "Where do you sleep", "Where is her house", "Where is his car", "Where is the dog hiding"]
+                },
+                {
+                    title: "Lesson 5: Can Questions",
+                    sentences: ["Can you help me", "Can he swim well", "Can she speak English", "Can they come here", "Can we go out", "Can it fly", "Can you see the moon", "Can he run fast", "Can she play piano", "Can they hear us", "Can I have a glass", "Can you open the door", "Can he drive a car", "Can she cook rice", "Can they dance well", "Can we sit here", "Can you hear the music", "Can he jump high", "Can she ride a bike", "Can I go now"]
+                }
+            ]
+        },
+        
+        currentCategory: 'basic',
+        currentLessonIdx: 0,
         currentList: [],
         currentIndex: 0,
         score: 0,
         placedWords: [],
         correctSentence: "",
+        view: 'main',
 
         start: () => {
             ui.get('sentences-section').style.display = 'flex';
-            sentences.currentList = [...sentences.pool].sort(() => 0.5 - Math.random());
+            sentences.showView('main');
+        },
+
+        back: () => {
+            if (sentences.view === 'main') {
+                ui.get('sentences-section').style.display = 'none';
+            } else if (sentences.view === 'lessons') {
+                sentences.showView('main');
+            } else if (sentences.view === 'practice' || sentences.view === 'result') {
+                sentences.showView('lessons');
+            }
+        },
+
+        showView: (v) => {
+            sentences.view = v;
+            const views = ['category-selection', 'lesson-selection', 'practice-area', 'result-screen'];
+            views.forEach(id => ui.get(`sentences-${id}`).style.display = 'none');
+            
+            if (v === 'main') {
+                ui.get('sentences-category-selection').style.display = 'grid';
+                ui.get('sentences-title').textContent = 'SENTENCE BUILDER';
+                ui.get('sentences-back-btn').textContent = '← BACK';
+            } else if (v === 'lessons') {
+                ui.get('sentences-lesson-selection').style.display = 'grid';
+                ui.get('sentences-title').textContent = sentences.currentCategory.toUpperCase();
+                ui.get('sentences-back-btn').textContent = '← MENU';
+            } else if (v === 'practice') {
+                ui.get('sentences-practice-area').style.display = 'block';
+                ui.get('sentences-title').textContent = sentences.data[sentences.currentCategory][sentences.currentLessonIdx].title;
+                ui.get('sentences-back-btn').textContent = '← LESSONS';
+            } else if (v === 'result') {
+                ui.get('sentences-result-screen').style.display = 'block';
+                ui.get('sentences-title').textContent = 'COMPLETE';
+                ui.get('sentences-back-btn').textContent = '← MENU';
+            }
+        },
+
+        showLessons: (cat) => {
+            sentences.currentCategory = cat;
+            const container = ui.get('sentences-lesson-selection');
+            container.innerHTML = sentences.data[cat].map((lesson, i) => `
+                <button class="tactile-button" onclick="sentences.initLesson(${i})">${lesson.title}</button>
+            `).join('');
+            sentences.showView('lessons');
+        },
+
+        initLesson: (idx) => {
+            sentences.currentLessonIdx = idx;
+            const lesson = sentences.data[sentences.currentCategory][idx];
+            sentences.currentList = [...lesson.sentences].sort(() => 0.5 - Math.random());
             sentences.currentIndex = 0;
             sentences.score = 0;
-            ui.get('sentences-practice-area').style.display = 'block';
-            ui.get('sentences-result-screen').style.display = 'none';
+            sentences.showView('practice');
             sentences.nextQuestion();
         },
 
-        close: () => {
-            ui.get('sentences-section').style.display = 'none';
-        },
-
         nextQuestion: () => {
-            if (sentences.currentIndex >= 10) {
+            if (sentences.currentIndex >= 20) {
                 sentences.showResult();
                 return;
             }
@@ -482,15 +586,15 @@
             ui.get('sentences-next-btn').style.display = 'none';
             targetArea.classList.remove('locked');
             
-            const progress = ((sentences.currentIndex + 1) / 10) * 100;
+            const progress = ((sentences.currentIndex + 1) / 20) * 100;
             ui.get('sentences-progress-fill').style.width = `${progress}%`;
-            ui.get('sentences-progress-text').textContent = `${sentences.currentIndex + 1} / 10`;
+            ui.get('sentences-progress-text').textContent = `${sentences.currentIndex + 1} / 20`;
             
             sentences.currentIndex++;
         },
 
         renderQuestion: () => {
-            const words = sentences.correctSentence.replace(/[.!]/g, '').split(' ');
+            const words = sentences.correctSentence.split(' ');
             const shuffled = [...words].sort(() => 0.5 - Math.random());
             
             const poolContainer = ui.get('sentences-pool');
@@ -522,7 +626,6 @@
             if (ui.get('sentences-target-area').classList.contains('locked')) return;
             const removedWord = sentences.placedWords.splice(index, 1)[0];
             
-            // Re-enable in pool
             const chips = document.querySelectorAll('.word-chip');
             for (let chip of chips) {
                 if (chip.textContent === removedWord && chip.classList.contains('used')) {
@@ -544,7 +647,7 @@
         check: () => {
             if (sentences.placedWords.length === 0) return;
             const current = sentences.placedWords.join(' ');
-            const target = sentences.correctSentence.replace(/[.!]/g, '');
+            const target = sentences.correctSentence;
             
             const targetArea = ui.get('sentences-target-area');
             targetArea.classList.add('locked');
@@ -556,7 +659,6 @@
             } else {
                 targetArea.parentElement.style.borderColor = '#cc0000';
                 targetArea.parentElement.style.background = '#ffeeee';
-                // Show correct one below?
                 const msg = document.createElement('p');
                 msg.className = 'hero-text';
                 msg.style.color = '#cc0000';
@@ -570,10 +672,9 @@
         },
 
         showResult: () => {
-            ui.get('sentences-practice-area').style.display = 'none';
-            ui.get('sentences-result-screen').style.display = 'block';
-            ui.get('sentences-final-score').textContent = `${sentences.score} / 10`;
-            ui.get('sentences-result-msg').textContent = sentences.score === 10 ? "PERFECT! Excellent sentence structure." : "Good effort! Keep practicing.";
+            sentences.showView('result');
+            ui.get('sentences-final-score').textContent = `${sentences.score} / 20`;
+            ui.get('sentences-result-msg').textContent = sentences.score === 20 ? "PERFECT! Excellent sentence structure." : "Good effort! Keep practicing.";
         }
     };
 

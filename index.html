@@ -309,11 +309,23 @@
     <!-- Sentence Builder Section (Full Screen Overlay) -->
     <div id="sentences-section" class="full-overlay" style="display: none;">
         <div class="overlay-header">
-            <button class="back-link" onclick="sentences.close()">← BACK</button>
+            <button class="back-link" id="sentences-back-btn" onclick="sentences.back()">← BACK</button>
             <h2 id="sentences-title">SENTENCE BUILDER</h2>
         </div>
 
-        <div id="sentences-practice-area">
+        <!-- Category Selection -->
+        <div id="sentences-category-selection" class="lesson-grid">
+            <button class="tactile-button" onclick="sentences.showLessons('basic')">BASIC STRUCTURE</button>
+            <button class="tactile-button" onclick="sentences.showLessons('negation')">NEGATION</button>
+            <button class="tactile-button" onclick="sentences.showLessons('questions')">QUESTIONS</button>
+        </div>
+
+        <!-- Lesson Selection -->
+        <div id="sentences-lesson-selection" class="lesson-grid" style="display: none;">
+            <!-- 5 Lessons injected here -->
+        </div>
+
+        <div id="sentences-practice-area" style="display: none;">
             <div class="card" style="margin-bottom: 20px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-style: dashed; background: var(--accent-color);">
                 <div id="sentences-target-area" class="sentence-drop-zone">
                     <!-- Placed words appear here -->
@@ -332,7 +344,7 @@
             </div>
 
             <div class="progress-container">
-                <div id="sentences-progress-text">1 / 10</div>
+                <div id="sentences-progress-text">1 / 20</div>
                 <div class="progress-bar">
                     <div id="sentences-progress-fill" class="progress-fill"></div>
                 </div>
@@ -343,9 +355,9 @@
         <div id="sentences-result-screen" class="result-screen" style="display: none;">
             <div class="card">
                 <h3>PRACTICE COMPLETE</h3>
-                <div class="final-score" id="sentences-final-score">0 / 10</div>
+                <div class="final-score" id="sentences-final-score">0 / 20</div>
                 <p id="sentences-result-msg" class="hero-text">Well done!</p>
-                <button class="tactile-button" onclick="sentences.start()">TRY AGAIN</button>
+                <button class="tactile-button" onclick="sentences.start()">BACK TO MENU</button>
             </div>
         </div>
     </div>
