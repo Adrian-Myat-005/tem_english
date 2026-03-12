@@ -80,6 +80,7 @@
                 <button class="tactile-button" onclick="numbers.start()">Numbers Practice</button>
                 <button class="tactile-button" onclick="days.start()">Days Practice</button>
                 <button class="tactile-button" onclick="prepositions.start()">Preposition Practice</button>
+                <button class="tactile-button" onclick="sentences.start()">Sentence Builder</button>
             `;
         },
 
@@ -94,6 +95,7 @@
                     if (ui.get('profile-popup')?.style.display === 'flex') ui.togglePopup();
                     if (ui.get('days-section')?.style.display === 'flex') days.close();
                     if (ui.get('numbers-section')?.style.display === 'flex') numbers.close();
+                    if (ui.get('sentences-section')?.style.display === 'flex') sentences.close();
                 }
             });
         },
@@ -430,6 +432,151 @@
         }
     };
 
+    const sentences = {
+        pool: [
+            "I am a student.",
+            "She is a doctor.",
+            "They are playing football.",
+            "We like to learn English.",
+            "The cat is under the table.",
+            "He goes to school every day.",
+            "I have a red pen.",
+            "It is a beautiful day.",
+            "My mother is cooking dinner.",
+            "You are my best friend."
+        ],
+        currentList: [],
+        currentIndex: 0,
+        score: 0,
+        placedWords: [],
+        correctSentence: "",
+
+        start: () => {
+            ui.get('sentences-section').style.display = 'flex';
+            sentences.currentList = [...sentences.pool].sort(() => 0.5 - Math.random());
+            sentences.currentIndex = 0;
+            sentences.score = 0;
+            ui.get('sentences-practice-area').style.display = 'block';
+            ui.get('sentences-result-screen').style.display = 'none';
+            sentences.nextQuestion();
+        },
+
+        close: () => {
+            ui.get('sentences-section').style.display = 'none';
+        },
+
+        nextQuestion: () => {
+            if (sentences.currentIndex >= 10) {
+                sentences.showResult();
+                return;
+            }
+            const targetArea = ui.get('sentences-target-area');
+            targetArea.parentElement.style.borderColor = 'var(--button-border)';
+            targetArea.parentElement.style.background = 'var(--accent-color)';
+
+            sentences.correctSentence = sentences.currentList[sentences.currentIndex];
+            sentences.placedWords = [];
+            sentences.renderQuestion();
+            
+            ui.get('sentences-check-btn').style.display = 'inline-flex';
+            ui.get('sentences-next-btn').style.display = 'none';
+            targetArea.classList.remove('locked');
+            
+            const progress = ((sentences.currentIndex + 1) / 10) * 100;
+            ui.get('sentences-progress-fill').style.width = `${progress}%`;
+            ui.get('sentences-progress-text').textContent = `${sentences.currentIndex + 1} / 10`;
+            
+            sentences.currentIndex++;
+        },
+
+        renderQuestion: () => {
+            const words = sentences.correctSentence.replace(/[.!]/g, '').split(' ');
+            const shuffled = [...words].sort(() => 0.5 - Math.random());
+            
+            const poolContainer = ui.get('sentences-pool');
+            poolContainer.innerHTML = shuffled.map((word, i) => `
+                <button class="word-chip" onclick="sentences.placeWord(this, '${word}')">${word}</button>
+            `).join('');
+
+            sentences.updateTargetArea();
+        },
+
+        placeWord: (btn, word) => {
+            btn.classList.add('used');
+            sentences.placedWords.push(word);
+            sentences.updateTargetArea();
+        },
+
+        updateTargetArea: () => {
+            const targetArea = ui.get('sentences-target-area');
+            if (sentences.placedWords.length === 0) {
+                targetArea.innerHTML = '<p class="hero-text placeholder-msg">Tap words below to build the sentence</p>';
+            } else {
+                targetArea.innerHTML = sentences.placedWords.map((word, i) => `
+                    <button class="word-chip-placed" onclick="sentences.removeWord(${i})">${word}</button>
+                `).join('');
+            }
+        },
+
+        removeWord: (index) => {
+            if (ui.get('sentences-target-area').classList.contains('locked')) return;
+            const removedWord = sentences.placedWords.splice(index, 1)[0];
+            
+            // Re-enable in pool
+            const chips = document.querySelectorAll('.word-chip');
+            for (let chip of chips) {
+                if (chip.textContent === removedWord && chip.classList.contains('used')) {
+                    chip.classList.remove('used');
+                    break; 
+                }
+            }
+            sentences.updateTargetArea();
+        },
+
+        reset: () => {
+            if (ui.get('sentences-target-area').classList.contains('locked')) return;
+            sentences.placedWords = [];
+            const chips = document.querySelectorAll('.word-chip');
+            chips.forEach(c => c.classList.remove('used'));
+            sentences.updateTargetArea();
+        },
+
+        check: () => {
+            if (sentences.placedWords.length === 0) return;
+            const current = sentences.placedWords.join(' ');
+            const target = sentences.correctSentence.replace(/[.!]/g, '');
+            
+            const targetArea = ui.get('sentences-target-area');
+            targetArea.classList.add('locked');
+            
+            if (current === target) {
+                sentences.score++;
+                targetArea.parentElement.style.borderColor = '#008800';
+                targetArea.parentElement.style.background = '#eeffee';
+            } else {
+                targetArea.parentElement.style.borderColor = '#cc0000';
+                targetArea.parentElement.style.background = '#ffeeee';
+                // Show correct one below?
+                const msg = document.createElement('p');
+                msg.className = 'hero-text';
+                msg.style.color = '#cc0000';
+                msg.style.marginTop = '10px';
+                msg.textContent = `Correct: ${sentences.correctSentence}`;
+                targetArea.appendChild(msg);
+            }
+
+            ui.get('sentences-check-btn').style.display = 'none';
+            ui.get('sentences-next-btn').style.display = 'inline-flex';
+        },
+
+        showResult: () => {
+            ui.get('sentences-practice-area').style.display = 'none';
+            ui.get('sentences-result-screen').style.display = 'block';
+            ui.get('sentences-final-score').textContent = `${sentences.score} / 10`;
+            ui.get('sentences-result-msg').textContent = sentences.score === 10 ? "PERFECT! Excellent sentence structure." : "Good effort! Keep practicing.";
+        }
+    };
+
     const days = {
         currentQuestion: null,
         currentIndex: 0,
@@ -722,6 +869,7 @@
     window.ui = ui;
     window.blog = blog;
     window.prepositions = prepositions;
+    window.sentences = sentences;
     window.days = days;
     window.numbers = numbers;
     window.auth = auth;

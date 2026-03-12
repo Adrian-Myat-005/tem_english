@@ -306,6 +306,50 @@
         </div>
     </div>
 
+    <!-- Sentence Builder Section (Full Screen Overlay) -->
+    <div id="sentences-section" class="full-overlay" style="display: none;">
+        <div class="overlay-header">
+            <button class="back-link" onclick="sentences.close()">← BACK</button>
+            <h2 id="sentences-title">SENTENCE BUILDER</h2>
+        </div>
+
+        <div id="sentences-practice-area">
+            <div class="card" style="margin-bottom: 20px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-style: dashed; background: var(--accent-color);">
+                <div id="sentences-target-area" class="sentence-drop-zone">
+                    <!-- Placed words appear here -->
+                    <p class="hero-text placeholder-msg">Tap words below to build the sentence</p>
+                </div>
+            </div>
+
+            <div id="sentences-pool" class="word-pool">
+                <!-- Shuffled word chips appear here -->
+            </div>
+
+            <div class="card-controls" style="margin-top: 30px;">
+                <button id="sentences-check-btn" class="tactile-button" onclick="sentences.check()">CHECK SENTENCE</button>
+                <button id="sentences-next-btn" class="tactile-button" style="display: none;" onclick="sentences.nextQuestion()">NEXT</button>
+                <button id="sentences-reset-btn" class="tactile-button small-button" onclick="sentences.reset()">RESET</button>
+            </div>
+
+            <div class="progress-container">
+                <div id="sentences-progress-text">1 / 10</div>
+                <div class="progress-bar">
+                    <div id="sentences-progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="sentences-result-screen" class="result-screen" style="display: none;">
+            <div class="card">
+                <h3>PRACTICE COMPLETE</h3>
+                <div class="final-score" id="sentences-final-score">0 / 10</div>
+                <p id="sentences-result-msg" class="hero-text">Well done!</p>
+                <button class="tactile-button" onclick="sentences.start()">TRY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
